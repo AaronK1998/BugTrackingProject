@@ -1,0 +1,64 @@
+﻿@page "/adminpage"
+
+@using BugTrackingProject.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using System.Security.Claims
+@using Microsoft.Extensions.Logging
+
+@inject IJSRuntime JsRuntime
+@inject UserManager<IdentityUser> _userManager
+@inject SignInManager<IdentityUser> _signInManager
+
+<h3>AdminPage</h3>
+
+<EditForm Model="newUser" OnValidSubmit="@AddUserWithRole">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+</EditForm>
+
+@code {
+    User newUser = new User();
+    List<Role> rolesList = new List<Role>();
+    List<SelectListItem> selectList = new List<SelectListItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        rolesList = new List<Role>()
+        {
+            new Role(){roleName = "Admin" , id = "1"},
+            new Role(){roleName = "IT Manager" , id = "2"},
+            new Role(){roleName = "IT User" , id = "3"},
+            new Role(){roleName = "Tester" , id = "4"},
+            new Role(){roleName = "Normal User" , id = "5"}
+        };
+
+        foreach(Role role in rolesList)
+        {
+            if(rolesList.Count < 1)
+            {
+                selectList.Add(new SelectListItem()
+                    {
+                        Text = role.roleName,
+                        Value = role.id,
+                        Selected = true
+            });
+            }
+
+            else
+            {
+                selectList.Add(new SelectListItem()
+                    {
+                        Text = role.roleName,
+                        Value = role.id,
+                        Selected = false
+                    });
+            }
+        }
+    }
+
+    public async void AddUserWithRole(EditContext context)
+    {
+        
+    }
+}
