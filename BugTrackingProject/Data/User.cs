@@ -9,6 +9,6 @@ namespace BugTrackingProject.Data
         public string loginName { get; set; } = string.Empty;
 
         [Required]
-        `public string userRole { get; set; } = string.Empty;
+        public string userRole { get; set; } = string.Empty;
     }
 }
