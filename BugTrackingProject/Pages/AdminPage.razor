@@ -1,5 +1,7 @@
 ﻿@page "/adminpage"
 
+@attribute [Authorize(Roles="Admin")]
+
 @using BugTrackingProject.Data
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.Rendering
@@ -15,6 +17,29 @@
 <EditForm Model="newUser" OnValidSubmit="@AddUserWithRole">
     <DataAnnotationsValidator />
     <ValidationSummary/>
+    <div class="form-group row">
+        <label for="login" class="col-sm-2 col-form-label">
+            Add User
+        </label>
+        <div class="col-sm-10">
+        <InputText id="login" @bind-Value="newUser.loginName"></InputText>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="role-select" class="col-sm-2 col-form-label">
+            Assign User Role
+        </label>
+    <div class="col-sm-10">
+        <InputSelect id="role-select" @bind-Value="newUser.userRole">
+            @foreach (var role in selectList)
+            {
+                <option value="@role.Value" selected=@role.Selected>@role.Text</option>
+            }
+        </InputSelect>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Save" />
+
 </EditForm>
 
 @code {
@@ -27,10 +52,10 @@
         rolesList = new List<Role>()
         {
             new Role(){roleName = "Admin" , id = "1"},
-            new Role(){roleName = "IT Manager" , id = "2"},
-            new Role(){roleName = "IT User" , id = "3"},
+            new Role(){roleName = "Manager" , id = "2"},
+            new Role(){roleName = "Developer" , id = "3"},
             new Role(){roleName = "Tester" , id = "4"},
-            new Role(){roleName = "Normal User" , id = "5"}
+            new Role(){roleName = "User" , id = "5"}
         };
 
         foreach(Role role in rolesList)
@@ -59,6 +84,25 @@
 
     public async void AddUserWithRole(EditContext context)
     {
-        
+        var usermodel = context.Model as User;
+
+        var user = new IdentityUser { UserName = usermodel.loginName, Email = usermodel.loginName, EmailConfirmed = true };
+
+        var messagedPrompt = "Failed!";
+        var result = await _userManager.CreateAsync(user, "Password1!");
+
+        if (result.Succeeded)
+        {
+            messagedPrompt = "User was added!";
+            var getRolesFromList = rolesList.FirstOrDefault(x => x.id == usermodel?.userRole);
+            var roleAddedResult= await _userManager.AddToRoleAsync(user, getRolesFromList?.roleName ?? "User");
+
+            if (roleAddedResult.Succeeded)
+            {
+                messagedPrompt += "\nRole was added";
+            }
+
+        }
+        await JsRuntime.InvokeVoidAsync("alert", messagedPrompt);
     }
 }
