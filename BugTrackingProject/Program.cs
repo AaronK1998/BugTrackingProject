@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +20,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddSyncfusionBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddSingleton<IBugService, BugService>();
-builder.Services.AddSingleton<IBugDetails ,BugDetailService>();
-builder.Services.AddSingleton<IStoryBoardService, StoryBoardService>();
+builder.Services.AddTransient<IBugService, BugService>();
+builder.Services.AddTransient<IBugDetails ,BugDetailService>();
+builder.Services.AddTransient<IStoryBoardService, StoryBoardService>();
 
 var app = builder.Build();
 
