@@ -1,0 +1,44 @@
+﻿<h3>BugListPage</h3>
+@page "/fetchbugdetails"
+@using BugTrackingProject.Models
+@using BugTrackingProject.Data
+@inject HttpClient Http
+@inject IBugService bugService
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.DropDowns
+
+@if(BugList is null)
+{
+    <h3>Please wait...loading</h3>
+}
+
+<div style="width:750px">
+    <SfGrid DataSource="@BugList" AllowPaging="true"
+            Toolbar="@(new List<string>() { "Add", "Edit", "Update", "Delete", "Cancel" })">
+        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true"></GridEditSettings>
+        <GridPageSettings PageSize="7"></GridPageSettings>
+        <GridColumns>
+            <GridColumn IsPrimaryKey="true" Field=@nameof(Bug.Id) HeaderText="ID" Width="40px">
+            </GridColumn>
+            <GridColumn Field=@nameof(Bug.BugHeading) HeaderText="Bug Name"></GridColumn>
+            <GridColumn Field=@nameof(Bug.ProductName) HeaderText="Product Name"></GridColumn>
+            <GridColumn Field=@nameof(Bug.Component) HeaderText="Component"></GridColumn>
+            <GridColumn Field=@nameof(Bug.Status) HeaderText="Status"></GridColumn>
+            <GridColumn Field=@nameof(Bug.UserId) HeaderText="User ID Assigned"></GridColumn>
+            <GridColumn Field=@nameof(Bug.LastUpdated) Format="d" HeaderText="Last Status Update"></GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+@code {
+
+    protected List<Bug> BugList = new();
+    protected List<Bug> searchBugData = new();
+    protected Bug bugs = new();
+    protected override async Task OnInitializedAsync()
+    {
+        BugList = await Task.Run(() => bugService.GetBugDetails());
+    }
+
+}
+
