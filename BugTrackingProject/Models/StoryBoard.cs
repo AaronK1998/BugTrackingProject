@@ -24,9 +24,6 @@ public partial class StoryBoard
     [StringLength(450)]
     public string? Assignee { get; set; }
 
-    [ForeignKey("Assignee")]
-    [InverseProperty("StoryBoards")]
-    public virtual AspNetUser? AssigneeNavigation { get; set; }
 
     [ForeignKey("LinkIssue")]
     [InverseProperty("StoryBoards")]

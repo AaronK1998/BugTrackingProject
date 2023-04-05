@@ -3,7 +3,7 @@
 @using BugTrackingProject.Models
 @using BugTrackingProject.Data
 @inject HttpClient Http
-@inject BugService bugService
+@inject IBugService bugService
 @using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.DropDowns
 
@@ -24,7 +24,7 @@
             <GridColumn Field=@nameof(Bug.ProductName) HeaderText="Product Name"></GridColumn>
             <GridColumn Field=@nameof(Bug.Component) HeaderText="Component"></GridColumn>
             <GridColumn Field=@nameof(Bug.Status) HeaderText="Status"></GridColumn>
-            <GridColumn Field=@nameof(Bug.User) HeaderText="User Assigned"></GridColumn>
+            <GridColumn Field=@nameof(Bug.UserId) HeaderText="User ID Assigned"></GridColumn>
             <GridColumn Field=@nameof(Bug.LastUpdated) Format="d" HeaderText="Last Status Update"></GridColumn>
         </GridColumns>
     </SfGrid>

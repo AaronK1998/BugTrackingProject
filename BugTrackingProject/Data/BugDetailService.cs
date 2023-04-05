@@ -5,7 +5,7 @@ namespace BugTrackingProject.Data
 {
     public class BugDetailService : IBugDetails
     {
-        private readonly ApplicationDbContext _dbContext = new ();
+        readonly ApplicationDbContext _dbContext = new();
 
         public BugDetailService(ApplicationDbContext dbContext)
         {

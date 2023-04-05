@@ -47,7 +47,4 @@ public partial class Bug
     [InverseProperty("LinkIssueNavigation")]
     public virtual ICollection<StoryBoard> StoryBoards { get; } = new List<StoryBoard>();
 
-    [ForeignKey("UserId")]
-    [InverseProperty("Bugs")]
-    public virtual AspNetUser? User { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿@page "/adminpage"
 
-@attribute [Authorize(Roles="Admin")]
+
 
 @using BugTrackingProject.Data
 @using Microsoft.AspNetCore.Identity
@@ -52,10 +52,7 @@
         rolesList = new List<Role>()
         {
             new Role(){roleName = "Admin" , id = "1"},
-            new Role(){roleName = "Manager" , id = "2"},
-            new Role(){roleName = "Developer" , id = "3"},
-            new Role(){roleName = "Tester" , id = "4"},
-            new Role(){roleName = "User" , id = "5"}
+            new Role(){roleName = "User" , id = "2"}
         };
 
         foreach(Role role in rolesList)
