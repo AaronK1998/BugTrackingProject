@@ -30,6 +30,8 @@ builder.Services.AddTransient<IStoryBoardService, StoryBoardService>();
 
 var app = builder.Build();
 
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mgo+DSMBaFt+QHFqVkNrXVNbdV5dVGpAd0N3RGlcdlR1fUUmHVdTRHRcQlljT35XdENiUXlYeXA=;Mgo+DSMBPh8sVXJ1S0d+X1RPd11dXmJWd1p/THNYflR1fV9DaUwxOX1dQl9gSXpTcEVnW3lfeHJdQ2Q=;Mgo+DSMBMAY9C3t2VFhhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hSn5XdkNjXX1YcXxSRmFY;MTYzODcyM0AzMjMxMmUzMTJlMzMzNUVNY1VsRmI1NklWNGRFT01Bak9EL3dOQWJtdENGZGd0WmlqeVkrZmV4RHc9");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
