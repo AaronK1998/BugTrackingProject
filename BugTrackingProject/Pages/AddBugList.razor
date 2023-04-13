@@ -1,5 +1,69 @@
 ﻿<h3>AddBugList</h3>
+@page "/Bug/AddBugList"
+@using Models
+@inject BugTrackingProject.Data.ApplicationDbContext _context
+
+
+<div class="add-bug-form">
+    <EditForm Model=@bug OnValidSubmit=@HandleValidSubmit>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="productName">Product Name</label>
+            <InputText id="productName" class="form-control" @bind-Value="bug.ProductName" />
+        </div>
+
+                <div class="form-group">
+            <label for="component">Component</label>
+            <InputText id="component" class="form-control" @bind-Value="bug.Component" />
+        </div>
+
+         <div class="form-group">
+            <label for="loginName">User reporting the bug</label>
+            <InputText id="loginName" class="form-control" @bind-Value="bug.LoginName" />
+        </div>
+
+        <div class="form-group">
+            <label for="bugHeading">Bug Title</label>
+            <InputText id="bugHeading" class="form-control" @bind-Value="bug.BugHeading" />
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <InputText id="status" placeholder="Open" readonly="true" disabled="@IsDisabled" @bind-Value="bug.Status" />
+        </div>
+
+        <div class="form-group">
+            <label for="lastUpdated">Date and Time</label>
+            <InputDate id="lastUpdated"  class="form-control" @bind-Value="bug.LastUpdated" />
+        </div>
+
+        <button class="btn btn-primary" type="submit">Save Bug</button>
+    </EditForm>
+</div>
 
 @code {
+    private Bug bug = new Bug();  
+    protected bool IsDisabled { get; set; }
 
+
+
+    private async void HandleValidSubmit()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(bug.Status)){
+                bug.Status = "Open";
+            }
+            _context.Bugs.Add(bug);
+            await _context.SaveChangesAsync();
+        }
+        catch
+        {
+            base.StateHasChanged();
+        }
+        bug = new Bug();
+        base.StateHasChanged();
+    }
 }

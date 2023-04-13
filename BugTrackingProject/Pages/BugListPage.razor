@@ -11,11 +11,17 @@
 {
     <h3>Please wait...loading</h3>
 }
+<div class="col-md-6">
+    <a href='/Bug/AddBugList' class="btn btn-primary" role="button">
+        <i class="fas fa-user-plus"></i>
+        Add New Bug
+    </a>
+</div>
 
 <div style="width:750px">
     <SfGrid DataSource="@BugList" AllowPaging="true"
-            Toolbar="@(new List<string>() { "Add", "Edit", "Update", "Delete", "Cancel" })">
-        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true"></GridEditSettings>
+            Toolbar="@(new List<string>() { "Edit", "Update", "Delete", "Cancel" })">
+        <GridEditSettings AllowAdding="false" AllowEditing="true" AllowDeleting="true"></GridEditSettings>
         <GridPageSettings PageSize="7"></GridPageSettings>
         <GridColumns>
             <GridColumn IsPrimaryKey="true" Field=@nameof(Bug.Id) HeaderText="ID" Width="40px">

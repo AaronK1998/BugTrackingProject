@@ -26,114 +26,104 @@ namespace BugTrackingProject.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BugHeading")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(250)")
-                        .HasColumnName("bugHeading");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Component")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("component");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("lastUpdated");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LoginName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("loginName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("productName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("status");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("userID");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bug");
+                    b.ToTable("Bugs");
                 });
 
             modelBuilder.Entity("BugTrackingProject.Models.BugDescription", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<double?>("ActualTimeTaken")
-                        .HasColumnType("float")
-                        .HasColumnName("actualTimeTaken");
+                        .HasColumnType("float");
 
                     b.Property<string>("BugDesciption")
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)")
-                        .HasColumnName("bugDesciption");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("EstimateTimeTaken")
-                        .HasColumnType("float")
-                        .HasColumnName("estimateTimeTaken");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("float");
 
                     b.Property<string>("Importance")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("importance");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecondaryStatus")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("secondaryStatus");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("TotalEstimatedTimeTaken")
-                        .HasColumnType("float")
-                        .HasColumnName("totalEstimatedTimeTaken");
+                        .HasColumnType("float");
 
                     b.Property<double?>("TotalTimeTaken")
-                        .HasColumnType("float")
-                        .HasColumnName("totalTimeTaken");
+                        .HasColumnType("float");
 
-                    b.HasIndex("Id");
+                    b.HasKey("Id");
 
-                    b.ToTable("BugDescription");
+                    b.ToTable("BugDescriptions");
+                });
+
+            modelBuilder.Entity("BugTrackingProject.Models.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("BugTrackingProject.Models.StoryBoard", b =>
                 {
                     b.Property<int>("StoryBoardId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("StoryBoardID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StoryBoardId"));
 
                     b.Property<string>("Assignee")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BugId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ChildIssues")
                         .HasColumnType("nvarchar(max)");
@@ -149,9 +139,9 @@ namespace BugTrackingProject.Migrations
 
                     b.HasKey("StoryBoardId");
 
-                    b.HasIndex("LinkIssue");
+                    b.HasIndex("BugId");
 
-                    b.ToTable("StoryBoard");
+                    b.ToTable("StoryBoards");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -356,24 +346,13 @@ namespace BugTrackingProject.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BugTrackingProject.Models.BugDescription", b =>
-                {
-                    b.HasOne("BugTrackingProject.Models.Bug", "IdNavigation")
-                        .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IdNavigation");
-                });
-
             modelBuilder.Entity("BugTrackingProject.Models.StoryBoard", b =>
                 {
-                    b.HasOne("BugTrackingProject.Models.Bug", "LinkIssueNavigation")
-                        .WithMany("StoryBoards")
-                        .HasForeignKey("LinkIssue");
+                    b.HasOne("BugTrackingProject.Models.Bug", "Bug")
+                        .WithMany()
+                        .HasForeignKey("BugId");
 
-                    b.Navigation("LinkIssueNavigation");
+                    b.Navigation("Bug");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -425,11 +404,6 @@ namespace BugTrackingProject.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BugTrackingProject.Models.Bug", b =>
-                {
-                    b.Navigation("StoryBoards");
                 });
 #pragma warning restore 612, 618
         }

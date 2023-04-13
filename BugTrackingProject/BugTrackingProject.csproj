@@ -22,4 +22,8 @@
     <PackageReference Include="Syncfusion.Blazor" Version="21.1.38" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

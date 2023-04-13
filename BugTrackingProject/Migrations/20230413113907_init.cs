@@ -51,22 +51,54 @@ namespace BugTrackingProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bug",
+                name: "BugDescriptions",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    productName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    component = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    loginName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    bugHeading = table.Column<string>(type: "varchar(250)", unicode: false, maxLength: 250, nullable: false),
-                    status = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    lastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    userID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true)
+                    SecondaryStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Importance = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EstimateTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    TotalEstimatedTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    ActualTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    TotalTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    BugDesciption = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bug", x => x.ID);
+                    table.PrimaryKey("PK_BugDescriptions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bugs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Component = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LoginName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BugHeading = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bugs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Statuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Statuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,48 +208,26 @@ namespace BugTrackingProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BugDescription",
+                name: "StoryBoards",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false),
-                    secondaryStatus = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    importance = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    estimateTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    totalEstimatedTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    actualTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    totalTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    bugDesciption = table.Column<string>(type: "varchar(max)", unicode: false, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.ForeignKey(
-                        name: "FK_BugDescription_Bug_ID",
-                        column: x => x.ID,
-                        principalTable: "Bug",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StoryBoard",
-                columns: table => new
-                {
-                    StoryBoardID = table.Column<int>(type: "int", nullable: false)
+                    StoryBoardId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StoryBoardDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChildIssues = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LinkIssue = table.Column<int>(type: "int", nullable: true),
                     Priority = table.Column<int>(type: "int", nullable: true),
-                    Assignee = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true)
+                    Assignee = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BugId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StoryBoard", x => x.StoryBoardID);
+                    table.PrimaryKey("PK_StoryBoards", x => x.StoryBoardId);
                     table.ForeignKey(
-                        name: "FK_StoryBoard_Bug_LinkIssue",
-                        column: x => x.LinkIssue,
-                        principalTable: "Bug",
-                        principalColumn: "ID");
+                        name: "FK_StoryBoards_Bugs_BugId",
+                        column: x => x.BugId,
+                        principalTable: "Bugs",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -260,14 +270,9 @@ namespace BugTrackingProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BugDescription_ID",
-                table: "BugDescription",
-                column: "ID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StoryBoard_LinkIssue",
-                table: "StoryBoard",
-                column: "LinkIssue");
+                name: "IX_StoryBoards_BugId",
+                table: "StoryBoards",
+                column: "BugId");
         }
 
         /// <inheritdoc />
@@ -289,10 +294,13 @@ namespace BugTrackingProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BugDescription");
+                name: "BugDescriptions");
 
             migrationBuilder.DropTable(
-                name: "StoryBoard");
+                name: "Statuses");
+
+            migrationBuilder.DropTable(
+                name: "StoryBoards");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -301,7 +309,7 @@ namespace BugTrackingProject.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Bug");
+                name: "Bugs");
         }
     }
 }

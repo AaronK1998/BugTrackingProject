@@ -21,5 +21,7 @@ namespace BugTrackingProject.Data
         public DbSet<BugDescription> BugDescriptions { get; set; }
 
         public DbSet<StoryBoard> StoryBoards { get; set; }
+
+        public DbSet<Status> Statuses { get; set; }
     }
 }
