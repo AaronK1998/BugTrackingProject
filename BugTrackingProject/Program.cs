@@ -25,7 +25,6 @@ builder.Services.AddSyncfusionBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<IBugService, BugService>();
-builder.Services.AddTransient<IBugDetails ,BugDetailService>();
 builder.Services.AddTransient<IStoryBoardService, StoryBoardService>();
 
 var app = builder.Build();

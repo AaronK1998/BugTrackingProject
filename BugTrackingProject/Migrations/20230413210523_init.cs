@@ -51,25 +51,6 @@ namespace BugTrackingProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BugDescriptions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SecondaryStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Importance = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EstimateTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    TotalEstimatedTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    ActualTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    TotalTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    BugDesciption = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BugDescriptions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Bugs",
                 columns: table => new
                 {
@@ -81,7 +62,14 @@ namespace BugTrackingProject.Migrations
                     BugHeading = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecondaryStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Importance = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EstimateTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    TotalEstimatedTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    ActualTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    TotalTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    BugDesciption = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -292,9 +280,6 @@ namespace BugTrackingProject.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "BugDescriptions");
 
             migrationBuilder.DropTable(
                 name: "Statuses");

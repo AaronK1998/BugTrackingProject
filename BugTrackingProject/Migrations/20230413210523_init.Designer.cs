@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BugTrackingProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230413113907_init")]
+    [Migration("20230413210523_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -20,50 +20,12 @@ namespace BugTrackingProject.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("BugTrackingProject.Models.Bug", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("BugHeading")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Component")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LoginName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Bugs");
-                });
-
-            modelBuilder.Entity("BugTrackingProject.Models.BugDescription", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,13 +39,35 @@ namespace BugTrackingProject.Migrations
                     b.Property<string>("BugDesciption")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("BugHeading")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Component")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double?>("EstimateTimeTaken")
                         .HasColumnType("float");
 
                     b.Property<string>("Importance")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LoginName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecondaryStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("TotalEstimatedTimeTaken")
@@ -92,9 +76,12 @@ namespace BugTrackingProject.Migrations
                     b.Property<double?>("TotalTimeTaken")
                         .HasColumnType("float");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("BugDescriptions");
+                    b.ToTable("Bugs");
                 });
 
             modelBuilder.Entity("BugTrackingProject.Models.Status", b =>

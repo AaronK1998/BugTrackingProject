@@ -17,5 +17,7 @@ public partial class StoryBoard
 
     public string? Assignee { get; set; }
 
+    public int? BugId { get; set; }
+
     public virtual Bug? Bug { get; set; }
 }
