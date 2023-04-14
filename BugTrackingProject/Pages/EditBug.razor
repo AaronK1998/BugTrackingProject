@@ -1,5 +1,5 @@
 ﻿<h3>Edit Bug Page</h3>
-@page "/Bug/BugDescriptionPage/{Id:int}"
+@page "/Bug/EditBug/{id:int}"
 @using BugTrackingProject.Models
 @using BugTrackingProject.Data
 @inject HttpClient Http
@@ -96,7 +96,7 @@
     [Parameter]
     public int id { get; set; }
 
-    public Bug bug = new Bug();  
+    public Bug bug = new Bug();
 
     public DateTime MinVal { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
@@ -115,12 +115,13 @@
     {
         try
         {
-            if (string.IsNullOrEmpty(bug.Status)){
+            if (string.IsNullOrEmpty(bug.Status))
+            {
                 bug.Status = "Open";
             }
             _context.Bugs.Add(bug);
             await _context.SaveChangesAsync();
-            
+
         }
         catch
         {
@@ -128,6 +129,7 @@
         }
         bug = new Bug();
         base.StateHasChanged();
-        
+
     }
 }
+

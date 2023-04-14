@@ -18,10 +18,57 @@
     </a>
 </div>
 
+@if (BugList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Bug Name</th>
+                <th>Product Name</th>
+                <th>Component</th>
+                <th>Status</th>
+                <th>User Assigned</th>
+                <th>More information</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bug in BugList)
+            {
+                <tr>
+                    <td>@bug.BugHeading</td>
+                    <td>@bug.ProductName</td>
+                    <td>@bug.Component</td>
+                    <td>@bug.Status</td>
+                    <td>@bug.LoginName</td>
+                    <td>
+                        <a href='/Bug/BugDescriptionPage/@bug.Id' class="btn btn-outline-dark" role="button">
+                            More Information </a>
+                    </td>
+                    <td>
+                        <a href='Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                        </td>
+                    <td>
+                        <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
 <div style="width:750px">
-    <SfGrid DataSource="@BugList" AllowPaging="true"
-            Toolbar="@(new List<string>() { "Edit", "Update", "Delete", "Cancel" })">
-        <GridEditSettings AllowAdding="false" AllowEditing="true" AllowDeleting="true"></GridEditSettings>
+    <SfGrid DataSource="@BugList" AllowPaging="true">
+        <GridEditSettings AllowAdding="false" AllowEditing="false" AllowDeleting="false"></GridEditSettings>
         <GridPageSettings PageSize="7"></GridPageSettings>
         <GridColumns>
             <GridColumn IsPrimaryKey="true" Field=@nameof(Bug.Id) HeaderText="ID" Width="40px">
@@ -46,5 +93,5 @@
         BugList = await Task.Run(() => bugService.GetBugDetails());
     }
 
-}
+}}
 
