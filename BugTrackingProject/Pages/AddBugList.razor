@@ -1,6 +1,11 @@
 ﻿<h3>AddBugList</h3>
 @page "/Bug/AddBugList"
 @using Models
+@using Data
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<IdentityUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
 @inject BugTrackingProject.Data.ApplicationDbContext _context
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
@@ -26,14 +31,25 @@
         </div>
 
          <div class="form-group">
-            <label for="loginName">User reporting the bug</label>
-            <InputText id="loginName" class="form-control" @bind-Value="bug.LoginName" />
+            <label for="loginName">User solving the bug</label>
+            <InputSelect @bind-Value="bug.LoginName" class="form-control">
+                <option value="">Select User to solve the bug</option>
+                @foreach (var user in ColUsers)
+                {
+                    <option value="@user.UserName"> @user.UserName </option>
+                }
+            </InputSelect>
         </div>
 
 
         <div class="form-group">
             <label for="status">Status</label>
-            <InputText id="status" placeholder="Open" readonly="true" disabled="@IsDisabled" @bind-Value="bug.Status" />
+            <InputSelect class="form-control" @bind-Value="bug.Status">
+                <option value="Open">Open</option>
+                <option value="Work in Progress">Work in Progress</option>
+                <option value="Testing">Testing</option>
+                <option value="Resolved">Resolved</option>
+             </InputSelect>
         </div>
 
         <div class="form-group">
@@ -48,12 +64,35 @@
 
         <div class="form-group">
             <label for="SecondaryStatus">Secondary Status</label>
-            <InputText id="SecondaryStatus" class="form-control" @bind-Value="bug.SecondaryStatus" />
+            <InputSelect class="form-control" @bind-Value="bug.SecondaryStatus">
+                @if (bug.Status == "Work in Progress")
+                {
+                        <option value="Waiting for more information from business unit">Waiting for more information from business unit</option>
+                        <option value="Gathering Requirements">Gathering Requirements</option>
+                        <option value="Being Fixed">Being Fixed</option>
+                        <option value="Extra Help Required!">Extra Help Required!</option>
+                        <option value="Bug Found..Fixing new bug">Bug Found..Fixing new bug</option>
+                }
+                @if (bug.Status == "Testing")
+                {
+                        <option value="Being Tested In Dev Enviroment">Being Tested In Dev Enviroment</option>
+                        <option value="Being Tested On UAT">Being Tested On UAT</option>
+                        <option value="Tested successfully and waiting to be released">Tested successfully and waiting to be released</option>
+                }
+                @if (bug.Status == "Resolved")
+                {
+                        <option value="Fixed">Fixed</option>
+                }
+            </InputSelect>
         </div>
 
         <div class="form-group">
             <label for="Importance">Importance</label>
-            <InputText id="Importance" class="form-control" @bind-Value="bug.Importance" />
+            <InputSelect class="form-control" @bind-Value="bug.Importance">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </InputSelect>
         </div>
 
         <div class="form-group">
@@ -84,21 +123,42 @@
 </div>
 
 @code {
-    public Bug bug = new Bug();  
+    public Bug bug = new Bug();
+
+    public List<User> Users { get; set; } = new List<User>();
     protected bool IsDisabled { get; set; }
     public DateTime MinVal { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
+    List<IdentityUser> ColUsers = new List<IdentityUser>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        GetUsers();
+    }
+
+    public void GetUsers()
+    {
+
+        // Collection to hold users
+        ColUsers = new List<IdentityUser>();
+        // get users from _UserManager
+        var user = _UserManager.Users.Select(x => new IdentityUser
+            {
+                UserName = x.UserName,
+            });
+        foreach (var item in user)
+        {
+            ColUsers.Add(item);
+        }
+    }
 
     public async void HandleValidSubmit()
     {
         try
         {
-            if (string.IsNullOrEmpty(bug.Status)){
-                bug.Status = "Open";
-            }
             _context.Bugs.Add(bug);
             await _context.SaveChangesAsync();
-            
+            navigationManager.NavigateTo("/fetchbugdetails");
         }
         catch
         {
