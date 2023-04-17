@@ -4,6 +4,7 @@
 @using Data
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
+@using System.Globalization
 @inject UserManager<IdentityUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
 @inject BugTrackingProject.Data.ApplicationDbContext _context
@@ -54,7 +55,9 @@
 
         <div class="form-group">
             <label for="lastUpdated">Date and Time</label>
-            <InputDate id="lastUpdated" class="form-control" Min="@MinVal" @bind-Value="bug.LastUpdated" />
+            <input type="date"
+                   min="@MinVal"
+                   @bind-value="bug.LastUpdated" />
         </div>
 
         <div class="form-group">
@@ -103,7 +106,7 @@
 
         <div class="form-group">
             <label for="TotalEstimatedTimeTaken">Total Esitmated Time Taken</label>
-            <InputNumber id="TotalEstimatedTimeTaken" class="form-control" @bind-Value="bug.TotalEstimatedTimeTaken" />
+            <InputNumber id="TotalEstimatedTimeTaken" readonly="true" class="form-control" @bind-Value="bug.TotalEstimatedTimeTaken" />
         </div>
 
         <div class="form-group">
@@ -113,7 +116,7 @@
 
         <div class="form-group">
             <label for="TotalTimeTaken">Total Time Taken</label>
-            <InputNumber id="TotalTimeTaken" class="form-control" @bind-Value="bug.TotalTimeTaken" />
+            <InputNumber readonly="true"  id="ActualTimeTaken" class="form-control" minValue=0 @bind-Value="bug.TotalTimeTaken"/>
         </div>
 
 
@@ -127,13 +130,14 @@
 
     public List<User> Users { get; set; } = new List<User>();
     protected bool IsDisabled { get; set; }
-    public DateTime MinVal { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+    private DateTime MinVal;
 
     List<IdentityUser> ColUsers = new List<IdentityUser>();
 
     protected override async Task OnInitializedAsync()
     {
         GetUsers();
+        MinVal = DateTime.UtcNow;
     }
 
     public void GetUsers()
@@ -156,6 +160,13 @@
     {
         try
         {
+            if (string.IsNullOrEmpty(bug.Status))
+            {
+                bug.Status = "Open";
+            }
+            AddTimeTaken();
+            AddEstimateTimeTaken();
+
             _context.Bugs.Add(bug);
             await _context.SaveChangesAsync();
             navigationManager.NavigateTo("/fetchbugdetails");
@@ -167,5 +178,45 @@
         bug = new Bug();
         base.StateHasChanged();
         
+    }
+
+    public void AddTimeTaken()
+    {
+        if (string.IsNullOrEmpty(Convert.ToString(bug.TotalTimeTaken)))
+        {
+            bug.TotalTimeTaken = 0;
+        }
+        else if (bug.ActualTimeTaken != null && bug.TotalTimeTaken != null)
+        {
+            bug.TotalTimeTaken += bug.ActualTimeTaken;
+        }
+        else if (bug.ActualTimeTaken == null && bug.TotalTimeTaken == null)
+        {
+            bug.TotalTimeTaken = 0;
+        }
+        else
+        {
+            bug.TotalTimeTaken = 0;
+        }
+    }
+
+    public void AddEstimateTimeTaken()
+    {
+        if (string.IsNullOrEmpty(Convert.ToString(bug.TotalEstimatedTimeTaken)))
+        {
+            bug.TotalEstimatedTimeTaken = 0;
+        }
+        else if (bug.EstimateTimeTaken != null && bug.TotalEstimatedTimeTaken != null)
+        {
+            bug.TotalEstimatedTimeTaken += bug.EstimateTimeTaken;
+        }
+        else if (bug.EstimateTimeTaken == null && bug.TotalEstimatedTimeTaken == null)
+        {
+            bug.TotalEstimatedTimeTaken = 0;
+        }
+        else
+        {
+            bug.TotalEstimatedTimeTaken = 0;
+        }
     }
 }

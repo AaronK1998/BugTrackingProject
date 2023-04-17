@@ -50,7 +50,9 @@
 
         <div class="form-group">
             <label for="lastUpdated">Date and Time</label>
-            <InputDate id="lastUpdated" class="form-control" Min="@MinVal" @bind-Value="bug.LastUpdated" />
+            <input type="date"
+                   hasvalue="@MinVal"
+                   @bind-value="bug.LastUpdated" />
         </div>
 
         <div class="form-group">
@@ -99,7 +101,7 @@
 
         <div class="form-group">
             <label for="TotalEstimatedTimeTaken">Total Esitmated Time Taken</label>
-            <InputNumber id="TotalEstimatedTimeTaken" class="form-control" @bind-Value="bug.TotalEstimatedTimeTaken" />
+            <InputNumber id="TotalEstimatedTimeTaken" readonly="true" class="form-control" @bind-Value="bug.TotalEstimatedTimeTaken" />
         </div>
 
         <div class="form-group">
@@ -109,13 +111,12 @@
 
         <div class="form-group">
             <label for="TotalTimeTaken">Total Time Taken</label>
-            <InputNumber id="TotalTimeTaken" class="form-control" @bind-Value="bug.TotalTimeTaken" />
+            <InputNumber readonly="true" id="ActualTimeTaken" class="form-control" @bind-Value="bug.TotalTimeTaken" />
         </div>
 
 
         <button class="btn btn-primary" type="submit">Save Bug</button>
     </EditForm>
-
 </div>
 
 @code {
@@ -160,10 +161,8 @@
     {
         try
         {
-            if (string.IsNullOrEmpty(bug.Status))
-            {
-                bug.Status = "Open";
-            }
+            AddTimeTaken();
+            AddEstimateTimeTaken();
             _context.Bugs.Add(bug);
             await _context.SaveChangesAsync();
 
@@ -175,6 +174,46 @@
         bug = new Bug();
         base.StateHasChanged();
 
+    }
+
+    public void AddTimeTaken()
+    {
+        if (string.IsNullOrEmpty(Convert.ToString(bug.TotalTimeTaken)))
+        {
+            bug.TotalTimeTaken = 0;
+        }
+        else if (bug.ActualTimeTaken != null && bug.TotalTimeTaken != null)
+        {
+            bug.TotalTimeTaken += bug.ActualTimeTaken;
+        }
+        else if (bug.ActualTimeTaken == null && bug.TotalTimeTaken == null)
+        {
+            bug.TotalTimeTaken = 0;
+        }
+        else
+        {
+            bug.TotalTimeTaken = 0;
+        }
+    }
+
+    public void AddEstimateTimeTaken()
+    {
+        if (string.IsNullOrEmpty(Convert.ToString(bug.TotalEstimatedTimeTaken)))
+        {
+            bug.TotalEstimatedTimeTaken = 0;
+        }
+        else if (bug.EstimateTimeTaken != null && bug.TotalEstimatedTimeTaken != null)
+        {
+            bug.TotalEstimatedTimeTaken += bug.EstimateTimeTaken;
+        }
+        else if (bug.EstimateTimeTaken == null && bug.TotalEstimatedTimeTaken == null)
+        {
+            bug.TotalEstimatedTimeTaken = 0;
+        }
+        else
+        {
+            bug.TotalEstimatedTimeTaken = 0;
+        }
     }
 }
 

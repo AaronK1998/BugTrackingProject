@@ -63,8 +63,19 @@
                     <td>Total Time Taken</td>
                     <td>@bug.TotalTimeTaken</td>
                 </tr>
-
-            </tbody>
+                <tr>
+                                    <td>
+                        <a href='Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                        </td>
+                    <td>
+                        <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
         </table>
     </div>
 
