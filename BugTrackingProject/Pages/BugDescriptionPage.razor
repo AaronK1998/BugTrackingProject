@@ -1,5 +1,4 @@
-﻿<h3>Edit Bug Page</h3>
-@page "/Bug/BugDescriptionPage/{Id:int}"
+﻿@page "/Bug/BugDescriptionPage/{Id:int}"
 @using BugTrackingProject.Models
 @using BugTrackingProject.Data
 @inject HttpClient Http
@@ -9,86 +8,65 @@
 
 
 <div class="add-bug-form">
-    <EditForm Model=@bug OnValidSubmit=@HandleValidSubmit>
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    <div class="form-group">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Bug Title</td>
+                    <td>@bug.BugHeading</td>
+                </tr>
+                <tr>
+                    <td>Product Name</td>
+                    <td>@bug.ProductName</td>
+                </tr>
+                <tr>
+                    <td>Component</td>
+                    <td>@bug.Component</td>
+                </tr>
+                <tr>
+                    <td>User resolving the bug</td>
+                    <td>@bug.LoginName</td>
+                </tr>
+                <tr>
+                    <td>First Status</td>
+                    <td>@bug.Status</td>
+                </tr>
+                <tr>
+                    <td>Secondary Status</td>
+                    <td>@bug.SecondaryStatus</td>
+                </tr>
+                                <tr>
+                    <td>Full Bug Description</td>
+                    <td>@bug.BugDesciption</td>
+                </tr>
+                <tr>
+                    <td>Importance</td>
+                    <td>@bug.Importance</td>
+                </tr>
+                <tr>
+                    <td>Last Updated</td>
+                    <td>@bug.LastUpdated</td>
+                </tr>
+                                <tr>
+                    <td>Estimated Time Taken</td>
+                    <td>@bug.EstimateTimeTaken</td>
+                </tr>
+                                <tr>
+                    <td>Total Estimated Time Taken</td>
+                    <td>@bug.TotalEstimatedTimeTaken</td>
+                </tr>
+                                <tr>
+                    <td>Actual Time Taken</td>
+                    <td>@bug.ActualTimeTaken</td>
+                </tr>
+                <tr>
+                    <td>Total Time Taken</td>
+                    <td>@bug.TotalTimeTaken</td>
+                </tr>
 
-        <div class="form-group">
-            <label for="bugHeading">Bug Title</label>
-            <InputText id="bugHeading" class="form-control" @bind-Value="bug.BugHeading" />
-        </div>
-
-        <div class="form-group">
-            <label for="productName">Product Name</label>
-            <InputText id="productName" class="form-control" @bind-Value="bug.ProductName" />
-        </div>
-
-                <div class="form-group">
-            <label for="component">Component</label>
-            <InputText id="component" class="form-control" @bind-Value="bug.Component" />
-        </div>
-
-         <div class="form-group">
-            <label for="loginName">User reporting the bug</label>
-            <InputText id="loginName" class="form-control" @bind-Value="bug.LoginName" />
-        </div>
-
-
-        <div class="form-group">
-            <label for="status">Status</label>
-            <InputSelect class="form-control" @bind-Value="bug.Status">
-                <option value="-- Select Status --">-- Select Status --</option>
-                <option value="Open">Open</option>
-                <option value="Work in Progress">Work in Progress</option>
-                <option value="Testing">Testing</option>
-                <option value="Resolved">Resolved</option>
-            </InputSelect>
-        </div>
-
-        <div class="form-group">
-            <label for="lastUpdated">Date and Time</label>
-            <InputDate id="lastUpdated" class="form-control" Min="@MinVal" @bind-Value="bug.LastUpdated" />
-        </div>
-
-        <div class="form-group">
-            <label for="BugDescription">Full Bug Description</label>
-            <InputTextArea id="BugDescription" class="form-control" @bind-Value="bug.BugDesciption" />
-        </div>
-
-        <div class="form-group">
-            <label for="SecondaryStatus">Secondary Status</label>
-            <InputText id="SecondaryStatus" class="form-control" @bind-Value="bug.SecondaryStatus" />
-        </div>
-
-        <div class="form-group">
-            <label for="Importance">Importance</label>
-            <InputText id="Importance" class="form-control" @bind-Value="bug.Importance" />
-        </div>
-
-        <div class="form-group">
-            <label for="EsitmatedTimeTaken">Esitmated Time Taken</label>
-            <InputNumber id="EsitmatedTimeTaken" class="form-control" @bind-Value="bug.EstimateTimeTaken" />
-        </div>
-
-
-        <div class="form-group">
-            <label for="TotalEstimatedTimeTaken">Total Esitmated Time Taken</label>
-            <InputNumber id="TotalEstimatedTimeTaken" class="form-control" @bind-Value="bug.TotalEstimatedTimeTaken" />
-        </div>
-
-        <div class="form-group">
-            <label for="ActualTimeTaken">Actual Time Taken</label>
-            <InputNumber id="ActualTimeTaken" class="form-control" @bind-Value="bug.ActualTimeTaken" />
-        </div>
-
-        <div class="form-group">
-            <label for="TotalTimeTaken">Total Time Taken</label>
-            <InputNumber id="TotalTimeTaken" class="form-control" @bind-Value="bug.TotalTimeTaken" />
-        </div>
-
-
-        <button class="btn btn-primary" type="submit">Save Bug</button>
-    </EditForm>
+            </tbody>
+        </table>
+    </div>
 
 </div>
 
@@ -98,36 +76,10 @@
 
     public Bug bug = new Bug();  
 
-    public DateTime MinVal { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
     protected override async Task OnInitializedAsync()
     {
         bug = await Task.Run(() => bugService.GetBugData(id));
     }
 
-    protected void UpdateBug()
-    {
-        bugService.UpdateBugDetails(bug);
-        navigationManager.NavigateTo("/Bug/BugDescriptionPage/" + id);
-    }
-
-    public async void HandleValidSubmit()
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(bug.Status)){
-                bug.Status = "Open";
-            }
-            _context.Bugs.Add(bug);
-            await _context.SaveChangesAsync();
-            
-        }
-        catch
-        {
-            base.StateHasChanged();
-        }
-        bug = new Bug();
-        base.StateHasChanged();
-        
-    }
 }

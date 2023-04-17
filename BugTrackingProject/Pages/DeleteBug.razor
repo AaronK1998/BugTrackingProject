@@ -1,5 +1,95 @@
 ﻿<h3>DeleteBug</h3>
 @page "/Bug/DeleteBug/{id:int}"
-@code {
 
+@using Models
+@using Data
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject IBugService bugService
+@inject ApplicationDbContext _context
+
+<div class="add-bug-form">
+    <div class="form-group">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Bug Title</td>
+                    <td>@bug.BugHeading</td>
+                </tr>
+                <tr>
+                    <td>Product Name</td>
+                    <td>@bug.ProductName</td>
+                </tr>
+                <tr>
+                    <td>Component</td>
+                    <td>@bug.Component</td>
+                </tr>
+                <tr>
+                    <td>User resolving the bug</td>
+                    <td>@bug.LoginName</td>
+                </tr>
+                <tr>
+                    <td>First Status</td>
+                    <td>@bug.Status</td>
+                </tr>
+                <tr>
+                    <td>Secondary Status</td>
+                    <td>@bug.SecondaryStatus</td>
+                </tr>
+                <tr>
+                    <td>Full Bug Description</td>
+                    <td>@bug.BugDesciption</td>
+                </tr>
+                <tr>
+                    <td>Importance</td>
+                    <td>@bug.Importance</td>
+                </tr>
+                <tr>
+                    <td>Last Updated</td>
+                    <td>@bug.LastUpdated</td>
+                </tr>
+                <tr>
+                    <td>Estimated Time Taken</td>
+                    <td>@bug.EstimateTimeTaken</td>
+                </tr>
+                <tr>
+                    <td>Total Estimated Time Taken</td>
+                    <td>@bug.TotalEstimatedTimeTaken</td>
+                </tr>
+                <tr>
+                    <td>Actual Time Taken</td>
+                    <td>@bug.ActualTimeTaken</td>
+                </tr>
+                <tr>
+                    <td>Total Time Taken</td>
+                    <td>@bug.TotalTimeTaken</td>
+                </tr>
+
+            </tbody>
+        </table>
+        <div class="form-group">
+            <input type="submit" value="Delete" @onclick="(async () => await RemoveBug(bug.Id))" class="btn btn-danger" />
+            <input type="submit" value="Cancel" @onclick="(() => Cancel())" class="btn btn-warning" />
+        </div>
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    Bug bug = new Bug();
+    protected override async Task OnInitializedAsync()
+    {
+        bug = await Task.Run(() => bugService.GetBugData(id));
+    }
+    protected async Task RemoveBug(int id)
+    {
+        await Task.Run(() => bugService.DeleteBug(id));
+        NavigationManager.NavigateTo("/fetchbugdetails");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/fetchbugdetails");
+    }
 }

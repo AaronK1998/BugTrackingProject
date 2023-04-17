@@ -65,24 +65,6 @@ else
         </tbody>
 
     </table>
-
-<div style="width:750px">
-    <SfGrid DataSource="@BugList" AllowPaging="true">
-        <GridEditSettings AllowAdding="false" AllowEditing="false" AllowDeleting="false"></GridEditSettings>
-        <GridPageSettings PageSize="7"></GridPageSettings>
-        <GridColumns>
-            <GridColumn IsPrimaryKey="true" Field=@nameof(Bug.Id) HeaderText="ID" Width="40px">
-            </GridColumn>
-            <GridColumn Field=@nameof(Bug.BugHeading) HeaderText="Bug Name"></GridColumn>
-            <GridColumn Field=@nameof(Bug.ProductName) HeaderText="Product Name"></GridColumn>
-            <GridColumn Field=@nameof(Bug.Component) HeaderText="Component"></GridColumn>
-            <GridColumn Field=@nameof(Bug.Status) HeaderText="Status"></GridColumn>
-            <GridColumn Field=@nameof(Bug.LoginName) HeaderText="User Assigned"></GridColumn>
-            <GridColumn Field=@nameof(Bug.LastUpdated) Format="d" HeaderText="Last Status Update"></GridColumn>
-        </GridColumns>
-    </SfGrid>
-</div>
-
 @code {
 
     protected List<Bug> BugList = new();
