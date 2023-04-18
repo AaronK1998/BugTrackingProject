@@ -2,7 +2,7 @@
 @page "/storyboardpage"
 @using Syncfusion.Blazor.Kanban
 
-<SfKanban TValue="TasksModel" KeyField="Status" DataSource="Tasks" AllowDragAndDrop="true">
+<SfKanban TValue="TasksModel" KeyField="Status" DataSource="Tasks" Add AllowDragAndDrop="true">
     <KanbanColumns>
         <KanbanColumn HeaderText="Backlog" KeyField="@(new List<string>() {"Open"})"></KanbanColumn>
         <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress"})"></KanbanColumn>

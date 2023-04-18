@@ -48,12 +48,6 @@
             </InputSelect>
         </div>
 
-        <div class="form-group">
-            <label for="lastUpdated">Date and Time</label>
-            <input type="date"
-                   hasvalue="@MinVal"
-                   @bind-value="bug.LastUpdated" />
-        </div>
 
         <div class="form-group">
             <label for="BugDescription">Full Bug Description</label>
@@ -126,8 +120,6 @@
     public Bug bug = new Bug();
     List<IdentityUser> ColUsers = new List<IdentityUser>();
 
-    public DateTime MinVal { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-
     protected override async Task OnInitializedAsync()
     {
         bug = await Task.Run(() => bugService.GetBugData(id));
@@ -151,16 +143,17 @@
         }
     }
 
-    protected void UpdateBug()
-    {
-        bugService.UpdateBugDetails(bug);
-        navigationManager.NavigateTo("/Bug/BugDescriptionPage/" + id);
-    }
+
 
     public async void HandleValidSubmit()
     {
         try
         {
+            if (bug.LastUpdated != DateTime.Now)
+            {
+                bug.LastUpdated = DateTime.Now;
+            }
+
             AddTimeTaken();
             AddEstimateTimeTaken();
             _context.Bugs.Add(bug);
@@ -171,9 +164,8 @@
         {
             base.StateHasChanged();
         }
-        bug = new Bug();
         base.StateHasChanged();
-
+        navigationManager.NavigateTo("/Bug/BugDescriptionPage/" + bug.Id);
     }
 
     public void AddTimeTaken()

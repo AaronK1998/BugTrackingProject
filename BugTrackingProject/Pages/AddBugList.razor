@@ -54,13 +54,6 @@
         </div>
 
         <div class="form-group">
-            <label for="lastUpdated">Date and Time</label>
-            <input type="date"
-                   min="@MinVal"
-                   @bind-value="bug.LastUpdated" />
-        </div>
-
-        <div class="form-group">
             <label for="BugDescription"> Bug Description</label>
             <InputTextArea id="BugDescription" class="form-control" @bind-Value="bug.BugDesciption" />
         </div>
@@ -130,14 +123,12 @@
 
     public List<User> Users { get; set; } = new List<User>();
     protected bool IsDisabled { get; set; }
-    private DateTime MinVal;
 
     List<IdentityUser> ColUsers = new List<IdentityUser>();
 
     protected override async Task OnInitializedAsync()
     {
         GetUsers();
-        MinVal = DateTime.UtcNow;
     }
 
     public void GetUsers()
@@ -166,7 +157,10 @@
             }
             AddTimeTaken();
             AddEstimateTimeTaken();
-
+            if (bug.LastUpdated == (DateTime.MinValue) || string.IsNullOrEmpty(Convert.ToString(bug.LastUpdated)))
+            {
+                bug.LastUpdated = DateTime.Now;
+            }
             _context.Bugs.Add(bug);
             await _context.SaveChangesAsync();
             navigationManager.NavigateTo("/fetchbugdetails");
@@ -177,7 +171,7 @@
         }
         bug = new Bug();
         base.StateHasChanged();
-        
+
     }
 
     public void AddTimeTaken()
