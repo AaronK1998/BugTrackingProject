@@ -1,5 +1,85 @@
 ﻿<h3>MyBugsPage</h3>
 @page "/Bug/MyBugs"
+@using BugTrackingProject.Models
+@using BugTrackingProject.Data
+@inject HttpClient Http
+@inject IBugService bugService
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.DropDowns
+
+@if (BugList is null)
+{
+    <h3>No Bugs In the system</h3>
+}
+
+<table class="table table-striped align-middle table-bordered">
+    <thead class="table-success">
+        <tr>
+            <th>Bug Name</th>
+            <th>Product Name</th>
+            <th>Component</th>
+            <th>Status</th>
+            <th>User Assigned</th>
+            <th>Last Status Update</th>
+            <th>More information</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bug in BugList)
+        {
+            @if (CurrentUserName == bug.LoginName)
+            {
+                <tr>
+                    <td>@bug.BugHeading</td>
+                    <td>@bug.ProductName</td>
+                    <td>@bug.Component</td>
+                    <td>@bug.Status</td>
+                    <td>@bug.LoginName</td>
+                    <td>@bug.LastUpdated</td>
+                    <td>
+                        <a href='/Bug/BugDescriptionPage/@bug.Id' class="btn btn-outline-dark" role="button">
+                            More Information
+                        </a>
+                    </td>
+                    <td>
+                        <a href='/Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                    </td>
+                    <td>
+                        <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+            @if (CurrentUserName != bug.LoginName && bug == null)
+            {
+                <p>No bugs for you </p>
+            }
+        }
+    </tbody>
+
+</table>
 @code {
+
+    protected List<Bug> BugList = new();
+    protected List<Bug> searchBugData = new();
+    protected Bug bugs = new();
+    [Inject]
+    AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    public string? CurrentUserName { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        BugList = await Task.Run(() => bugService.GetBugDetails());
+        if (AuthenticationStateProvider is not null)
+        {
+            var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            CurrentUserName = authenticationState.User.Identity?.Name;
+        }
+    }
 
 }

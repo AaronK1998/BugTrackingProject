@@ -17,13 +17,6 @@
         Add New Bug
     </a>
 </div>
-
-@if (BugList == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
     <table class="table table-striped align-middle table-bordered">
         <thead class="table-success">
             <tr>
@@ -77,5 +70,5 @@ else
         BugList = await Task.Run(() => bugService.GetBugDetails());
     }
 
-}}
+}
 

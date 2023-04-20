@@ -202,7 +202,7 @@ namespace BugTrackingProject.Migrations
                     StoryBoardId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StoryBoardDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ChildIssues = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LinkIssue = table.Column<int>(type: "int", nullable: true),
                     Priority = table.Column<int>(type: "int", nullable: true),
                     Assignee = table.Column<string>(type: "nvarchar(max)", nullable: true),

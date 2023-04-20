@@ -16,7 +16,6 @@
     <EditForm Model=@bug OnValidSubmit=@HandleValidSubmit>
         <DataAnnotationsValidator />
         <ValidationSummary />
-
         <div class="form-group">
             <label for="bugHeading">Bug Title</label>
             <InputText id="bugHeading" class="form-control" @bind-Value="bug.BugHeading" />
@@ -27,14 +26,20 @@
             <InputText id="productName" class="form-control" @bind-Value="bug.ProductName" />
         </div>
 
-                <div class="form-group">
+        <div class="form-group">
             <label for="component">Component</label>
             <InputText id="component" class="form-control" @bind-Value="bug.Component" />
         </div>
 
-         <div class="form-group">
-            <label for="loginName">User reporting the bug</label>
-            <InputText id="loginName" class="form-control" @bind-Value="bug.LoginName" />
+        <div class="form-group">
+            <label for="loginName">User solving the bug</label>
+            <InputSelect @bind-Value="bug.LoginName" class="form-control">
+                <option value="">Select User to solve the bug</option>
+                @foreach (var user in ColUsers)
+                {
+                    <option value="@user.UserName"> @user.UserName </option>
+                }
+            </InputSelect>
         </div>
 
 
@@ -48,9 +53,8 @@
             </InputSelect>
         </div>
 
-
         <div class="form-group">
-            <label for="BugDescription">Full Bug Description</label>
+            <label for="BugDescription"> Bug Description</label>
             <InputTextArea id="BugDescription" class="form-control" @bind-Value="bug.BugDesciption" />
         </div>
 
@@ -105,9 +109,8 @@
 
         <div class="form-group">
             <label for="TotalTimeTaken">Total Time Taken</label>
-            <InputNumber readonly="true" id="ActualTimeTaken" class="form-control" @bind-Value="bug.TotalTimeTaken" />
+            <InputNumber readonly="true" id="ActualTimeTaken" class="form-control" minValue=0 @bind-Value="bug.TotalTimeTaken" />
         </div>
-
 
         <button class="btn btn-primary" type="submit">Save Bug</button>
     </EditForm>
@@ -149,16 +152,11 @@
     {
         try
         {
-            if (bug.LastUpdated != DateTime.Now)
-            {
-                bug.LastUpdated = DateTime.Now;
-            }
-
             AddTimeTaken();
             AddEstimateTimeTaken();
-            _context.Bugs.Add(bug);
+            bug.LastUpdated = DateTime.Now;
+            _context.Bugs.Update(bug);
             await _context.SaveChangesAsync();
-
         }
         catch
         {

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BugTrackingProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230413210523_init")]
+    [Migration("20230420180316_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -115,14 +115,14 @@ namespace BugTrackingProject.Migrations
                     b.Property<int?>("BugId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ChildIssues")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("LinkIssue")
                         .HasColumnType("int");
 
                     b.Property<int?>("Priority")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StoryBoardDescription")
                         .HasColumnType("nvarchar(max)");
