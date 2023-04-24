@@ -1,5 +1,45 @@
 ﻿<h3>StoryBoardPage</h3>
+@page "/storyboardpage"
+@using Syncfusion.Blazor.Kanban
+@using Models
+@using Data
+@inject IStoryBoardService storyboardService
+@inject ApplicationDbContext _context
+
+<div style="padding :10px">
+    <button class="e-btn" @onclick="@ShowAddCardDialog">Add new card</button>
+</div>
+
+<SfKanban TValue="StoryBoard" DataSource="@StoryboardList" KeyField="Status">
+    <KanbanColumns>
+        <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open" })"></KanbanColumn>
+        <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress" })"></KanbanColumn>
+        <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing" })"></KanbanColumn>
+        <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close" })"></KanbanColumn>
+    </KanbanColumns>
+    <KanbanCardSettings HeaderField="Title" ContentField="Summary"></KanbanCardSettings>
+    <KanbanSwimlaneSettings KeyField="Assignee"></KanbanSwimlaneSettings>
+</SfKanban>
 
 @code {
+    SfKanban<StoryBoard> KanbanRef;
 
+    protected List<StoryBoard> StoryboardList = new();
+    public StoryBoard storyBoard = new StoryBoard();
+    protected override async Task OnInitializedAsync()
+    {
+        StoryboardList = await Task.Run(() => storyboardService.GetStoryboardDetails());
+    }
+
+    private async void ShowAddCardDialog()
+    {
+        StoryBoard data = new StoryBoard()
+            {
+                StoryBoardId = (this.StoryboardList.Count() + 1)
+            };
+        await this.KanbanRef.OpenDialog(CurrentAction.Add, data);
+        _context.StoryBoards.Add(storyBoard);
+        await _context.SaveChangesAsync();
+    }
 }
+

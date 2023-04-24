@@ -1,13 +1,14 @@
-﻿<h3>AddBugList</h3>
-@page "/Bug/AddBugList"
-@using Models
-@using Data
+﻿<h3>Edit Bug Page</h3>
+@page "/Bug/EditBug/{id:int}"
+@using BugTrackingProject.Models
+@using BugTrackingProject.Data
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
-@using System.Globalization
 @inject UserManager<IdentityUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
-@inject BugTrackingProject.Data.ApplicationDbContext _context
+@inject HttpClient Http
+@inject IBugService bugService
+@inject ApplicationDbContext _context
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
 
@@ -15,7 +16,6 @@
     <EditForm Model=@bug OnValidSubmit=@HandleValidSubmit>
         <DataAnnotationsValidator />
         <ValidationSummary />
-
         <div class="form-group">
             <label for="bugHeading">Bug Title</label>
             <InputText id="bugHeading" class="form-control" @bind-Value="bug.BugHeading" />
@@ -26,12 +26,12 @@
             <InputText id="productName" class="form-control" @bind-Value="bug.ProductName" />
         </div>
 
-                <div class="form-group">
+        <div class="form-group">
             <label for="component">Component</label>
             <InputText id="component" class="form-control" @bind-Value="bug.Component" />
         </div>
 
-         <div class="form-group">
+        <div class="form-group">
             <label for="loginName">User solving the bug</label>
             <InputSelect @bind-Value="bug.LoginName" class="form-control">
                 <option value="">Select User to solve the bug</option>
@@ -50,7 +50,7 @@
                 <option value="Work in Progress">Work in Progress</option>
                 <option value="Testing">Testing</option>
                 <option value="Resolved">Resolved</option>
-             </InputSelect>
+            </InputSelect>
         </div>
 
         <div class="form-group">
@@ -63,21 +63,21 @@
             <InputSelect class="form-control" @bind-Value="bug.SecondaryStatus">
                 @if (bug.Status == "Work in Progress")
                 {
-                        <option value="Waiting for more information from business unit">Waiting for more information from business unit</option>
-                        <option value="Gathering Requirements">Gathering Requirements</option>
-                        <option value="Being Fixed">Being Fixed</option>
-                        <option value="Extra Help Required!">Extra Help Required!</option>
-                        <option value="Bug Found..Fixing new bug">Bug Found..Fixing new bug</option>
+                    <option value="Waiting for more information from business unit">Waiting for more information from business unit</option>
+                    <option value="Gathering Requirements">Gathering Requirements</option>
+                    <option value="Being Fixed">Being Fixed</option>
+                    <option value="Extra Help Required!">Extra Help Required!</option>
+                    <option value="Bug Found..Fixing new bug">Bug Found..Fixing new bug</option>
                 }
                 @if (bug.Status == "Testing")
                 {
-                        <option value="Being Tested In Dev Enviroment">Being Tested In Dev Enviroment</option>
-                        <option value="Being Tested On UAT">Being Tested On UAT</option>
-                        <option value="Tested successfully and waiting to be released">Tested successfully and waiting to be released</option>
+                    <option value="Being Tested In Dev Enviroment">Being Tested In Dev Enviroment</option>
+                    <option value="Being Tested On UAT">Being Tested On UAT</option>
+                    <option value="Tested successfully and waiting to be released">Tested successfully and waiting to be released</option>
                 }
                 @if (bug.Status == "Resolved")
                 {
-                        <option value="Fixed">Fixed</option>
+                    <option value="Fixed">Fixed</option>
                 }
             </InputSelect>
         </div>
@@ -109,27 +109,26 @@
 
         <div class="form-group">
             <label for="TotalTimeTaken">Total Time Taken</label>
-            <InputNumber readonly="true"  id="ActualTimeTaken" class="form-control" minValue=0 @bind-Value="bug.TotalTimeTaken"/>
+            <InputNumber readonly="true" id="ActualTimeTaken" class="form-control" minValue=0 @bind-Value="bug.TotalTimeTaken" />
         </div>
-
 
         <button class="btn btn-primary" type="submit">Save Bug</button>
     </EditForm>
-
 </div>
 
 @code {
+    [Parameter]
+    public int id { get; set; }
+
     public Bug bug = new Bug();
-
-    public List<User> Users { get; set; } = new List<User>();
-    protected bool IsDisabled { get; set; }
-
     List<IdentityUser> ColUsers = new List<IdentityUser>();
 
     protected override async Task OnInitializedAsync()
     {
+        bug = await Task.Run(() => bugService.GetBugData(id));
         GetUsers();
     }
+
 
     public void GetUsers()
     {
@@ -147,31 +146,24 @@
         }
     }
 
+
+
     public async void HandleValidSubmit()
     {
         try
         {
-            if (string.IsNullOrEmpty(bug.Status))
-            {
-                bug.Status = "Open";
-            }
             AddTimeTaken();
             AddEstimateTimeTaken();
-            if (bug.LastUpdated == (DateTime.MinValue) || string.IsNullOrEmpty(Convert.ToString(bug.LastUpdated)))
-            {
-                bug.LastUpdated = DateTime.Now;
-            }
-            _context.Bugs.Add(bug);
+            bug.LastUpdated = DateTime.Now;
+            _context.Bugs.Update(bug);
             await _context.SaveChangesAsync();
-            navigationManager.NavigateTo("/fetchbugdetails");
         }
         catch
         {
             base.StateHasChanged();
         }
-        bug = new Bug();
         base.StateHasChanged();
-
+        navigationManager.NavigateTo("/Bug/BugDescriptionPage/" + bug.Id);
     }
 
     public void AddTimeTaken()
@@ -214,3 +206,4 @@
         }
     }
 }
+

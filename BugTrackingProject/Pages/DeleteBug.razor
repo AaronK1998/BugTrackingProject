@@ -1,11 +1,12 @@
-﻿@page "/Bug/BugDescriptionPage/{Id:int}"
-@using BugTrackingProject.Models
-@using BugTrackingProject.Data
+﻿<h3>DeleteBug</h3>
+@page "/Bug/DeleteBug/{id:int}"
+
+@using Models
+@using Data
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 @inject IBugService bugService
 @inject ApplicationDbContext _context
-@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
-
 
 <div class="add-bug-form">
     <div class="form-group">
@@ -35,7 +36,7 @@
                     <td>Secondary Status</td>
                     <td>@bug.SecondaryStatus</td>
                 </tr>
-                                <tr>
+                <tr>
                     <td>Full Bug Description</td>
                     <td>@bug.BugDesciption</td>
                 </tr>
@@ -47,15 +48,15 @@
                     <td>Last Updated</td>
                     <td>@bug.LastUpdated</td>
                 </tr>
-                                <tr>
+                <tr>
                     <td>Estimated Time Taken</td>
                     <td>@bug.EstimateTimeTaken</td>
                 </tr>
-                                <tr>
+                <tr>
                     <td>Total Estimated Time Taken</td>
                     <td>@bug.TotalEstimatedTimeTaken</td>
                 </tr>
-                                <tr>
+                <tr>
                     <td>Actual Time Taken</td>
                     <td>@bug.ActualTimeTaken</td>
                 </tr>
@@ -63,20 +64,13 @@
                     <td>Total Time Taken</td>
                     <td>@bug.TotalTimeTaken</td>
                 </tr>
-                <tr>
-                                    <td>
-                        <a href='Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
-                            Edit
-                        </a>
-                        </td>
-                    <td>
-                        <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
-                            Delete
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
+
+            </tbody>
         </table>
+        <div class="form-group">
+            <input type="submit" value="Delete" @onclick="(async () => await RemoveBug(bug.Id))" class="btn btn-danger" />
+            <input type="submit" value="Cancel" @onclick="(() => Cancel())" class="btn btn-warning" />
+        </div>
     </div>
 
 </div>
@@ -84,13 +78,18 @@
 @code {
     [Parameter]
     public int id { get; set; }
-
-    public Bug bug = new Bug();  
-
-
+    Bug bug = new Bug();
     protected override async Task OnInitializedAsync()
     {
         bug = await Task.Run(() => bugService.GetBugData(id));
     }
-
+    protected async Task RemoveBug(int id)
+    {
+        await Task.Run(() => bugService.DeleteBug(id));
+        NavigationManager.NavigateTo("/fetchbugdetails");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/fetchbugdetails");
+    }
 }
