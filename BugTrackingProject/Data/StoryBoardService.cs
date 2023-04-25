@@ -1,4 +1,5 @@
 ﻿using BugTrackingProject.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugTrackingProject.Data
@@ -11,6 +12,7 @@ namespace BugTrackingProject.Data
         {
             _dbContext = dbContext;
         }
+        
 
         public void AddStoryboard(StoryBoard storyBoard)
         {

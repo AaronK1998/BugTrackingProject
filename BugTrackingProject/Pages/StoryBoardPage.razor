@@ -1,35 +1,50 @@
-﻿<h3>StoryBoardPage</h3>
-@page "/storyboardpage"
+﻿@page "/storyboardpage"
+@using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.Kanban
 @using Models
 @using Data
 @inject IStoryBoardService storyboardService
 @inject ApplicationDbContext _context
 
+<AuthorizeView Roles="Admin, User">
+
 <div style="padding :10px">
     <button class="e-btn" @onclick="@ShowAddCardDialog">Add new card</button>
 </div>
 
-<SfKanban TValue="StoryBoard" DataSource="@StoryboardList" KeyField="Status">
+<SfKanban @ref="KanbanRef" TValue="StoryBoard" KeyField=" Status" DataSource="@KanbanDatasource" AllowDragAndDrop="true">
     <KanbanColumns>
-        <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open" })"></KanbanColumn>
-        <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress" })"></KanbanColumn>
-        <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing" })"></KanbanColumn>
-        <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close" })"></KanbanColumn>
+        <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open"})"></KanbanColumn>
+        <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress"})"></KanbanColumn>
+        <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing"})"></KanbanColumn>
+        <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close"})"></KanbanColumn>
     </KanbanColumns>
     <KanbanCardSettings HeaderField="Title" ContentField="Summary"></KanbanCardSettings>
-    <KanbanSwimlaneSettings KeyField="Assignee"></KanbanSwimlaneSettings>
 </SfKanban>
 
+</AuthorizeView>
 @code {
-    SfKanban<StoryBoard> KanbanRef;
-
-    protected List<StoryBoard> StoryboardList = new();
+    SfKanban<StoryBoard> KanbanRef { get; set; }
     public StoryBoard storyBoard = new StoryBoard();
+    public List<StoryBoard> StoryboardList = new List<StoryBoard>();
+
+    private List<StoryBoard> KanbanDatasource = new List<StoryBoard>();
     protected override async Task OnInitializedAsync()
     {
         StoryboardList = await Task.Run(() => storyboardService.GetStoryboardDetails());
+        KanbanDatasource = storyboardService.GetStoryboardDetails().ToList();
     }
+
+    public class Status
+    {
+    public string ID { get; set; }
+    public string Text { get; set; }
+    }
+    public List<Status> localData = new List<Status>
+    {new Status() { ID= "1", Text= "Open" },
+        new Status() { ID= "2", Text= "Work in Progress" },
+        new Status() { ID= "3", Text= "Finished" }
+    };
 
     private async void ShowAddCardDialog()
     {
@@ -37,7 +52,7 @@
             {
                 StoryBoardId = (this.StoryboardList.Count() + 1)
             };
-        await this.KanbanRef.OpenDialog(CurrentAction.Add, data);
+        await this.KanbanRef.OpenDialogAsync(CurrentAction.Add, data);
         _context.StoryBoards.Add(storyBoard);
         await _context.SaveChangesAsync();
     }
