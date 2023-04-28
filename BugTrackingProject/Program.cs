@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,11 @@ builder.Services.AddSyncfusionBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<IBugService, BugService>();
-builder.Services.AddTransient<IStoryBoardService, StoryBoardService>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<HttpClient>(factory => new HttpClient(new HttpClientHandler()
+{
+    ServerCertificateCustomValidationCallback = (HttpRequestMessage m, X509Certificate2 f, X509Chain x, SslPolicyErrors d) => true
+}));
 
 var app = builder.Build();
 

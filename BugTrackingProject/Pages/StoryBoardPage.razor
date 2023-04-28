@@ -1,45 +1,43 @@
-﻿<h3>StoryBoardPage</h3>
-@page "/storyboardpage"
+﻿@page "/storyboardpage"
+@using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.Kanban
+@using Syncfusion.Blazor.Data
 @using Models
 @using Data
-@inject IStoryBoardService storyboardService
 @inject ApplicationDbContext _context
 
-<div style="padding :10px">
-    <button class="e-btn" @onclick="@ShowAddCardDialog">Add new card</button>
-</div>
+<AuthorizeView Roles="Admin, User">
 
-<SfKanban TValue="StoryBoard" DataSource="@StoryboardList" KeyField="Status">
-    <KanbanColumns>
-        <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open" })"></KanbanColumn>
-        <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress" })"></KanbanColumn>
-        <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing" })"></KanbanColumn>
-        <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close" })"></KanbanColumn>
-    </KanbanColumns>
-    <KanbanCardSettings HeaderField="Title" ContentField="Summary"></KanbanCardSettings>
-    <KanbanSwimlaneSettings KeyField="Assignee"></KanbanSwimlaneSettings>
-</SfKanban>
 
+    <SfKanban TValue="TasksModel" KeyField="Status" DataSource="Tasks">
+        <KanbanColumns>
+            <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open"})"></KanbanColumn>
+            <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress"})"></KanbanColumn>
+            <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing"})"></KanbanColumn>
+            <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close"})"></KanbanColumn>
+        </KanbanColumns>
+        <KanbanCardSettings HeaderField="Title" ContentField="Summary"></KanbanCardSettings>
+    </SfKanban>
+    </AuthorizeView>
 @code {
-    SfKanban<StoryBoard> KanbanRef;
-
-    protected List<StoryBoard> StoryboardList = new();
-    public StoryBoard storyBoard = new StoryBoard();
-    protected override async Task OnInitializedAsync()
+    public class TasksModel
     {
-        StoryboardList = await Task.Run(() => storyboardService.GetStoryboardDetails());
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Status { get; set; }
+        public string Summary { get; set; }
     }
 
-    private async void ShowAddCardDialog()
+    public List<TasksModel> Tasks = new List<TasksModel>()
     {
-        StoryBoard data = new StoryBoard()
-            {
-                StoryBoardId = (this.StoryboardList.Count() + 1)
-            };
-        await this.KanbanRef.OpenDialog(CurrentAction.Add, data);
-        _context.StoryBoards.Add(storyBoard);
-        await _context.SaveChangesAsync();
-    }
+        new TasksModel { Id = "Task 1", Title = "BLAZ-29001", Status = "Open", Summary = "Analyze the new requirements gathered from the customer." },
+        new TasksModel { Id = "Task 2", Title = "BLAZ-29002", Status = "Open", Summary = "Show the retrieved data from the server in grid control." },
+        new TasksModel { Id = "Task 3", Title = "BLAZ-29003", Status = "InProgress", Summary = "Improve application performance" },
+        new TasksModel { Id = "Task 4", Title = "BLAZ-29004", Status = "Testing", Summary = "Fix the issues reported by the customer." },
+        new TasksModel { Id = "Task 5", Title = "BLAZ-29005", Status = "Testing", Summary = "Fix the issues reported in Safari browser." },
+        new TasksModel { Id = "Task 6", Title = "BLAZ-29006", Status = "Close", Summary = "Analyze SQL server 2008 connection." },
+        new TasksModel { Id = "Task 7", Title = "BLAZ-29007", Status = "Close", Summary = "Analyze grid control." },
+        new TasksModel { Id = "Task 8", Title = "BLAZ-29008", Status = "Close", Summary = "Stored procedure for initial data binding of the grid." }
+    };
 }
 

@@ -1,5 +1,4 @@
-﻿<h3>MyBugsPage</h3>
-@page "/Bug/MyBugs"
+﻿@page "/Bug/MyBugs"
 @using BugTrackingProject.Models
 @using BugTrackingProject.Data
 @inject HttpClient Http
@@ -8,6 +7,8 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.DropDowns
 
+
+<AuthorizeView Roles="Admin, User">
 @if (BugList is null)
 {
     <h3>No Bugs In the system</h3>
@@ -64,6 +65,7 @@
     </tbody>
 
 </table>
+</AuthorizeView>
 @code {
 
     protected List<Bug> BugList = new();

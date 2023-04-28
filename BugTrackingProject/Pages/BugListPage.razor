@@ -1,5 +1,4 @@
-﻿<h3>BugListPage</h3>
-@page "/fetchbugdetails"
+﻿@page "/fetchbugdetails"
 @using BugTrackingProject.Models
 @using BugTrackingProject.Data
 @inject HttpClient Http
@@ -7,6 +6,7 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.DropDowns
 
+<AuthorizeView Roles="Admin, User">
 @if(BugList is null)
 {
     <h3>Please wait...loading</h3>
@@ -60,6 +60,7 @@
         </tbody>
 
     </table>
+</AuthorizeView>
 @code {
 
     protected List<Bug> BugList = new();
