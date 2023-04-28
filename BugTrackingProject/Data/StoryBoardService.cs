@@ -1,78 +1,33 @@
 ﻿using BugTrackingProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BugTrackingProject.Data
 {
-    public class StoryBoardService : IStoryBoardService
+    public class StoryBoardService
     {
-        readonly ApplicationDbContext _dbContext = new();
+        StoryboardContext db = new StoryboardContext();
 
-        public StoryBoardService(ApplicationDbContext dbContext)
+        //To Get all Orders details   
+        public DbSet<StoryBoard> GetAllStoryboards()
         {
-            _dbContext = dbContext;
+            try
+            {
+                return db.StoryBoards;
+            }
+            catch
+            {
+                throw;
+            }
         }
-        
 
         public void AddStoryboard(StoryBoard storyBoard)
         {
             try
             {
-                _dbContext.StoryBoards.Add(storyBoard);
-                _dbContext.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        public void DeleteStoryboard(int id)
-        {
-            try
-            {
-                StoryBoard? storyBoard = _dbContext.StoryBoards.Find(id);
-                if (storyBoard != null)
-                {
-                    _dbContext.StoryBoards.Remove(storyBoard);
-                    _dbContext.SaveChanges();
-                }
-                else
-                {
-                    throw new ArgumentNullException();
-                }
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        public StoryBoard GetStoryboardData(int id)
-        {
-            try
-            {
-                StoryBoard? storyBoard = _dbContext.StoryBoards.Find(id);
-                if (storyBoard != null)
-                {
-                    return storyBoard;
-                }
-                else
-                {
-                    throw new ArgumentNullException();
-                }
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        public List<StoryBoard> GetStoryboardDetails()
-        {
-            try
-            {
-                return _dbContext.StoryBoards.ToList();
+                db.StoryBoards.Add(storyBoard);
+                db.SaveChanges();
             }
             catch
             {
@@ -84,8 +39,35 @@ namespace BugTrackingProject.Data
         {
             try
             {
-                _dbContext.Entry(storyBoard).State = EntityState.Modified;
-                _dbContext.SaveChanges();
+                db.Entry(storyBoard).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public StoryBoard GetStoryboardData(int id)
+        {
+            try
+            {
+                StoryBoard story = db.StoryBoards.Find(id);
+                return story;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+    
+
+        public void DeleteStoryboard(int id)
+        {
+            try
+            {
+                db.StoryBoards.Remove(db.StoryBoards.Where(or => or.StoryBoardId == id).FirstOrDefault());
+                db.SaveChanges();
             }
             catch
             {
