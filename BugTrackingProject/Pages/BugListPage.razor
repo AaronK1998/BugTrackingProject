@@ -6,6 +6,13 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.DropDowns
 
+<NotAuthorized>
+        <p>Sorry, you're not authorized to reach this page.</p>
+        <p>You may need to log in as a different user.</p>
+</NotAuthorized>
+
+
+
 <AuthorizeView Roles="Admin, User">
 @if(BugList is null)
 {

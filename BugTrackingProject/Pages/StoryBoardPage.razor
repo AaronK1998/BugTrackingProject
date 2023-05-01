@@ -6,6 +6,11 @@
 @using Data
 @inject ApplicationDbContext _context
 
+<NotAuthorized>
+        <p>Sorry, you're not authorized to reach this page.</p>
+        <p>You may need to log in as a different user.</p>
+</NotAuthorized>
+
 <AuthorizeView Roles="Admin, User">
 
 
@@ -19,7 +24,44 @@
         <KanbanCardSettings HeaderField="Title" ContentField="Summary"></KanbanCardSettings>
     </SfKanban>
     </AuthorizeView>
+
+@*    <SfKanban ID="Kanban" TValue="StoryBoard" KeyField="Status">
+        <SfDataManager Url="/api/Default" UpdateUrl="/api/Default/Update" RemoveUrl="/api/Default/Delete" InsertUrl="/api/Default/Add" CrudUrl="/api/Default/Batch" Adaptor="Adaptors.UrlAdaptor"></SfDataManager>
+        <KanbanColumns>
+                <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open"})"></KanbanColumn>
+                <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress"})"></KanbanColumn>
+                <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing"})"></KanbanColumn>
+                <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close"})"></KanbanColumn>
+            </KanbanColumns>
+        <KanbanCardSettings HeaderField="StoryboardID" ContentField="StoryBoardID"></KanbanCardSettings>
+    </SfKanban>*@
+
+
 @code {
+
+    SfKanban<StoryBoard> KanbanRef { get; set; }
+    public StoryBoard storyBoard = new StoryBoard();
+    public List<StoryBoard> StoryboardList = new List<StoryBoard>();
+
+    private List<StoryBoard> KanbanDatasource = new List<StoryBoard>();
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    StoryboardList = await Task.Run(() => storyboardService.GetStoryboardDetails());
+    //    KanbanDatasource = storyboardService.GetStoryboardDetails().ToList();
+    //}
+
+    public class Status
+    {
+        public string ID { get; set; }
+        public string Text { get; set; }
+    }
+    public List<Status> localData = new List<Status>
+    {new Status() { ID= "1", Text= "Open" },
+        new Status() { ID= "2", Text= "Work in Progress" },
+        new Status() { ID= "3", Text= "Finished" }
+    };
+
+
     public class TasksModel
     {
         public string Id { get; set; }
