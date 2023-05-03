@@ -6,65 +6,68 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.DropDowns
 
-<NotAuthorized>
-        <p>Sorry, you're not authorized to reach this page.</p>
-        <p>You may need to log in as a different user.</p>
-</NotAuthorized>
 
 <AuthorizeView Roles="Admin, User">
-@if(BugList is null)
-{
-    <h3>Please wait...loading</h3>
-}
-<div class="col-md-6">
-    <a href='/Bug/AddBugList' class="btn btn-primary" role="button">
-        <i class="fas fa-user-plus"></i>
-        Add New Bug
-    </a>
-</div>
-    <table class="table table-striped align-middle table-bordered">
-        <thead class="table-success">
-            <tr>
-                <th>Bug Name</th>
-                <th>Product Name</th>
-                <th>Component</th>
-                <th>Status</th>
-                <th>User Assigned</th>
-                <th>Last Status Update</th>
-                <th>More information</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var bug in BugList)
-            {
+    <NotAuthorized>
+        <p>Sorry, you're not authorized to reach this page.</p>
+        <p>You may need to log in as a different user.</p>
+    </NotAuthorized>
+    <Authorized>
+        @if (BugList is null)
+        {
+            <h3>Please wait...loading</h3>
+        }
+        <div class="col-md-6">
+            <a href='/Bug/AddBugList' class="btn btn-primary" role="button">
+                <i class="fas fa-user-plus"></i>
+                Add New Bug
+            </a>
+        </div>
+        <table class="table table-striped align-middle table-bordered">
+            <thead class="table-success">
                 <tr>
-                    <td>@bug.BugHeading</td>
-                    <td>@bug.ProductName</td>
-                    <td>@bug.Component</td>
-                    <td>@bug.Status</td>
-                    <td>@bug.LoginName</td>
-                    <td>@bug.LastUpdated</td>
-                    <td>
-                        <a href='/Bug/BugDescriptionPage/@bug.Id' class="btn btn-outline-dark" role="button">
-                            More Information </a>
-                    </td>
-                    <td>
-                        <a href='Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
-                            Edit
-                        </a>
-                        </td>
-                    <td>
-                        <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
-                            Delete
-                        </a>
-                    </td>
+                    <th>Bug Name</th>
+                    <th>Product Name</th>
+                    <th>Component</th>
+                    <th>Status</th>
+                    <th>User Assigned</th>
+                    <th>Last Status Update</th>
+                    <th>More information</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
-            }
-        </tbody>
+            </thead>
+            <tbody>
+                @foreach (var bug in BugList)
+                {
+                    <tr>
+                        <td>@bug.BugHeading</td>
+                        <td>@bug.ProductName</td>
+                        <td>@bug.Component</td>
+                        <td>@bug.Status</td>
+                        <td>@bug.LoginName</td>
+                        <td>@bug.LastUpdated</td>
+                        <td>
+                            <a href='/Bug/BugDescriptionPage/@bug.Id' class="btn btn-outline-dark" role="button">
+                                More Information
+                            </a>
+                        </td>
+                        <td>
+                            <a href='Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
+                                Edit
+                            </a>
+                        </td>
+                        <td>
+                            <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
 
-    </table>
+        </table>
+    </Authorized>
 </AuthorizeView>
 @code {
 

@@ -35,7 +35,7 @@
                     <td>Secondary Status</td>
                     <td>@bug.SecondaryStatus</td>
                 </tr>
-                                <tr>
+                <tr>
                     <td>Full Bug Description</td>
                     <td>@bug.BugDesciption</td>
                 </tr>
@@ -47,15 +47,15 @@
                     <td>Last Updated</td>
                     <td>@bug.LastUpdated</td>
                 </tr>
-                                <tr>
+                <tr>
                     <td>Estimated Time Taken</td>
                     <td>@bug.EstimateTimeTaken</td>
                 </tr>
-                                <tr>
+                <tr>
                     <td>Total Estimated Time Taken</td>
                     <td>@bug.TotalEstimatedTimeTaken</td>
                 </tr>
-                                <tr>
+                <tr>
                     <td>Actual Time Taken</td>
                     <td>@bug.ActualTimeTaken</td>
                 </tr>
@@ -64,18 +64,18 @@
                     <td>@bug.TotalTimeTaken</td>
                 </tr>
                 <tr>
-                                    <td>
+                    <td>
                         <a href='Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
                             Edit
                         </a>
-                        </td>
+                    </td>
                     <td>
                         <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
                             Delete
                         </a>
                     </td>
                 </tr>
-                </tbody>
+            </tbody>
         </table>
     </div>
 
@@ -85,7 +85,7 @@
     [Parameter]
     public int id { get; set; }
 
-    public Bug bug = new Bug();  
+    public Bug bug = new Bug();
 
 
     protected override async Task OnInitializedAsync()
