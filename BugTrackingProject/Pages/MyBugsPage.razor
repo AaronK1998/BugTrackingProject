@@ -8,63 +8,70 @@
 @using Syncfusion.Blazor.DropDowns
 
 
+
 <AuthorizeView Roles="Admin, User">
-@if (BugList is null)
-{
-    <h3>No Bugs In the system</h3>
-}
-
-<table class="table table-striped align-middle table-bordered">
-    <thead class="table-success">
-        <tr>
-            <th>Bug Name</th>
-            <th>Product Name</th>
-            <th>Component</th>
-            <th>Status</th>
-            <th>User Assigned</th>
-            <th>Last Status Update</th>
-            <th>More information</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var bug in BugList)
+    <NotAuthorized>
+        <p>Sorry, you're not authorized to reach this page.</p>
+        <p>You may need to log in as a different user.</p>
+    </NotAuthorized>
+    <Authorized>
+        @if (BugList is null)
         {
-            @if (CurrentUserName == bug.LoginName)
-            {
-                <tr>
-                    <td>@bug.BugHeading</td>
-                    <td>@bug.ProductName</td>
-                    <td>@bug.Component</td>
-                    <td>@bug.Status</td>
-                    <td>@bug.LoginName</td>
-                    <td>@bug.LastUpdated</td>
-                    <td>
-                        <a href='/Bug/BugDescriptionPage/@bug.Id' class="btn btn-outline-dark" role="button">
-                            More Information
-                        </a>
-                    </td>
-                    <td>
-                        <a href='/Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
-                            Edit
-                        </a>
-                    </td>
-                    <td>
-                        <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
-                            Delete
-                        </a>
-                    </td>
-                </tr>
-            }
-            @if (CurrentUserName != bug.LoginName && bug == null)
-            {
-                <p>No bugs for you </p>
-            }
+            <h3>No Bugs In the system</h3>
         }
-    </tbody>
 
-</table>
+        <table class="table table-striped align-middle table-bordered">
+            <thead class="table-success">
+                <tr>
+                    <th>Bug Name</th>
+                    <th>Product Name</th>
+                    <th>Component</th>
+                    <th>Status</th>
+                    <th>User Assigned</th>
+                    <th>Last Status Update</th>
+                    <th>More information</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bug in BugList)
+                {
+                    @if (CurrentUserName == bug.LoginName)
+                    {
+                        <tr>
+                            <td>@bug.BugHeading</td>
+                            <td>@bug.ProductName</td>
+                            <td>@bug.Component</td>
+                            <td>@bug.Status</td>
+                            <td>@bug.LoginName</td>
+                            <td>@bug.LastUpdated</td>
+                            <td>
+                                <a href='/Bug/BugDescriptionPage/@bug.Id' class="btn btn-outline-dark" role="button">
+                                    More Information
+                                </a>
+                            </td>
+                            <td>
+                                <a href='/Bug/EditBug/@bug.Id' class="btn btn-outline-dark" role="button">
+                                    Edit
+                                </a>
+                            </td>
+                            <td>
+                                <a href='/Bug/DeleteBug/@bug.Id' class="btn btn-outline-danger" role="button">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    @if (CurrentUserName != bug.LoginName && bug == null)
+                    {
+                        <p>No bugs for you </p>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </Authorized>
 </AuthorizeView>
 @code {
 

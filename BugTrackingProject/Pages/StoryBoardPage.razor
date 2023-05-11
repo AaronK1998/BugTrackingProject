@@ -6,20 +6,41 @@
 @using Data
 @inject ApplicationDbContext _context
 
+
+
 <AuthorizeView Roles="Admin, User">
+    <NotAuthorized>
+        <p>Sorry, you're not authorized to reach this page.</p>
+        <p>You may need to log in as a different user.</p>
+    </NotAuthorized>
+    <Authorized>
 
+        <SfKanban TValue="TasksModel" KeyField="Status" DataSource="Tasks">
+            <KanbanColumns>
+                <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open"})"></KanbanColumn>
+                <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress"})"></KanbanColumn>
+                <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing"})"></KanbanColumn>
+                <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close"})"></KanbanColumn>
+            </KanbanColumns>
+            <KanbanCardSettings HeaderField="Title" ContentField="Summary"></KanbanCardSettings>
+        </SfKanban>
+    </Authorized>
+</AuthorizeView>
 
-    <SfKanban TValue="TasksModel" KeyField="Status" DataSource="Tasks">
-        <KanbanColumns>
-            <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open"})"></KanbanColumn>
-            <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress"})"></KanbanColumn>
-            <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing"})"></KanbanColumn>
-            <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close"})"></KanbanColumn>
-        </KanbanColumns>
-        <KanbanCardSettings HeaderField="Title" ContentField="Summary"></KanbanCardSettings>
-    </SfKanban>
-    </AuthorizeView>
 @code {
+
+    public class Status
+    {
+        public string ID { get; set; }
+        public string Text { get; set; }
+    }
+    public List<Status> localData = new List<Status>
+    {new Status() { ID= "1", Text= "Open" },
+        new Status() { ID= "2", Text= "Work in Progress" },
+        new Status() { ID= "3", Text= "Finished" }
+    };
+
+
     public class TasksModel
     {
         public string Id { get; set; }

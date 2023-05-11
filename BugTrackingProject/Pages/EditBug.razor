@@ -71,7 +71,7 @@
                 }
                 @if (bug.Status == "Testing")
                 {
-                    <option value="Being Tested In Dev Enviroment">Being Tested In Dev Enviroment</option>
+                    <option value="Being Tested In Dev Environment">Being Tested In Dev Environment</option>
                     <option value="Being Tested On UAT">Being Tested On UAT</option>
                     <option value="Tested successfully and waiting to be released">Tested successfully and waiting to be released</option>
                 }
@@ -92,8 +92,8 @@
         </div>
 
         <div class="form-group">
-            <label for="EsitmatedTimeTaken">Esitmated Time Taken</label>
-            <InputNumber id="EsitmatedTimeTaken" min="0" class="form-control" @bind-Value="bug.EstimateTimeTaken" />
+            <label for="EstimatedTimeTaken">Estimated Time Taken</label>
+            <InputNumber id="EstimatedTimeTaken" min="0" max="1000" class="form-control" @bind-Value="bug.EstimateTimeTaken" />
         </div>
 
 
@@ -104,7 +104,7 @@
 
         <div class="form-group">
             <label for="ActualTimeTaken">Actual Time Taken</label>
-            <InputNumber id="ActualTimeTaken" min="0" class="form-control" @bind-Value="bug.ActualTimeTaken" />
+            <InputNumber id="ActualTimeTaken" min="0" max="1000" class="form-control" @bind-Value="bug.ActualTimeTaken" />
         </div>
 
         <div class="form-group">

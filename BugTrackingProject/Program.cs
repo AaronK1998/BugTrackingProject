@@ -25,7 +25,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<IBugService, BugService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<HttpClient>(factory => new HttpClient(new HttpClientHandler()

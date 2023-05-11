@@ -1,4 +1,4 @@
-﻿<h3>AddBugList</h3>
+﻿<h3>Add New Bug</h3>
 @page "/Bug/AddBugList"
 @using Models
 @using Data
@@ -26,12 +26,12 @@
             <InputText id="productName" class="form-control" @bind-Value="bug.ProductName" />
         </div>
 
-                <div class="form-group">
+        <div class="form-group">
             <label for="component">Component</label>
             <InputText id="component" class="form-control" @bind-Value="bug.Component" />
         </div>
 
-         <div class="form-group">
+        <div class="form-group">
             <label for="loginName">User solving the bug</label>
             <InputSelect @bind-Value="bug.LoginName" class="form-control">
                 <option value="">Select User to solve the bug</option>
@@ -50,7 +50,7 @@
                 <option value="Work in Progress">Work in Progress</option>
                 <option value="Testing">Testing</option>
                 <option value="Resolved">Resolved</option>
-             </InputSelect>
+            </InputSelect>
         </div>
 
         <div class="form-group">
@@ -63,21 +63,21 @@
             <InputSelect class="form-control" @bind-Value="bug.SecondaryStatus">
                 @if (bug.Status == "Work in Progress")
                 {
-                        <option value="Waiting for more information from business unit">Waiting for more information from business unit</option>
-                        <option value="Gathering Requirements">Gathering Requirements</option>
-                        <option value="Being Fixed">Being Fixed</option>
-                        <option value="Extra Help Required!">Extra Help Required!</option>
-                        <option value="Bug Found..Fixing new bug">Bug Found..Fixing new bug</option>
+                    <option value="Waiting for more information from business unit">Waiting for more information from business unit</option>
+                    <option value="Gathering Requirements">Gathering Requirements</option>
+                    <option value="Being Fixed">Being Fixed</option>
+                    <option value="Extra Help Required!">Extra Help Required!</option>
+                    <option value="Bug Found..Fixing new bug">Bug Found..Fixing new bug</option>
                 }
                 @if (bug.Status == "Testing")
                 {
-                        <option value="Being Tested In Dev Enviroment">Being Tested In Dev Enviroment</option>
-                        <option value="Being Tested On UAT">Being Tested On UAT</option>
-                        <option value="Tested successfully and waiting to be released">Tested successfully and waiting to be released</option>
+                    <option value="Being Tested In Dev Environment">Being Tested In Dev Environment</option>
+                    <option value="Being Tested On UAT">Being Tested On UAT</option>
+                    <option value="Tested successfully and waiting to be released">Tested successfully and waiting to be released</option>
                 }
                 @if (bug.Status == "Resolved")
                 {
-                        <option value="Fixed">Fixed</option>
+                    <option value="Fixed">Fixed</option>
                 }
             </InputSelect>
         </div>
@@ -92,8 +92,8 @@
         </div>
 
         <div class="form-group">
-            <label for="EsitmatedTimeTaken">Esitmated Time Taken</label>
-            <InputNumber id="EsitmatedTimeTaken" min="0" class="form-control" @bind-Value="bug.EstimateTimeTaken" />
+            <label for="EstimatedTimeTaken">Estimated Time Taken</label>
+            <InputNumber id="EstimatedTimeTaken" min="0" max="1000" class="form-control" @bind-Value="bug.EstimateTimeTaken" />
         </div>
 
 
@@ -104,12 +104,12 @@
 
         <div class="form-group">
             <label for="ActualTimeTaken">Actual Time Taken</label>
-            <InputNumber id="ActualTimeTaken" min="0" class="form-control" @bind-Value="bug.ActualTimeTaken" />
+            <InputNumber id="ActualTimeTaken" min="0" max="1000" class="form-control" @bind-Value="bug.ActualTimeTaken" />
         </div>
 
         <div class="form-group">
             <label for="TotalTimeTaken">Total Time Taken</label>
-            <InputNumber readonly="true"  id="ActualTimeTaken" class="form-control" minValue=0 @bind-Value="bug.TotalTimeTaken"/>
+            <InputNumber readonly="true" id="ActualTimeTaken" class="form-control" minValue=0 @bind-Value="bug.TotalTimeTaken" />
         </div>
 
 
