@@ -1,6 +1,7 @@
 ﻿@page "/Bug/BugDescriptionPage/{Id:int}"
 @using BugTrackingProject.Models
 @using BugTrackingProject.Data
+@using Microsoft.EntityFrameworkCore
 @inject HttpClient Http
 @inject IBugService bugService
 @inject ApplicationDbContext _context
@@ -79,18 +80,38 @@
         </table>
     </div>
 
+    <div class="comments">
+        @foreach(var comment in bugs.comment)
+        {
+        <div class="comment">
+            <span>@comment.CreatedDate</span>   <h5>@*comment.User.UserName*@</h5>
+            <p> @comment.CommentText </p>
+            <hr />
+        </div>
+        }
+     </div>
+
 </div>
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     public Bug bug = new Bug();
+    public BugTrackingProject.Models.Bug bugs = new Bug();
+
 
 
     protected override async Task OnInitializedAsync()
     {
-        bug = await Task.Run(() => bugService.GetBugData(id));
+        //bug = await Task.Run(() => bugService.GetBugData(id));
+        bug = _context.Bugs.Where(x => x.Id == Id).FirstOrDefault();
+        getComments();
     }
 
+    public void getComments()
+    {
+        bugs = _context.Bugs.Where(x => x.Id == Id).Include(c => c.comment).FirstOrDefault();
+        //bugs = _context.Bugs.Where(x => x.Id == Id).Include(c => c.comment).ThenInclude(b => b.User).FirstOrDefault();
+    }
 }

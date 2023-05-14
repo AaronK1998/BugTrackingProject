@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BugTrackingProject.Data;
+using System;
 using System.Collections.Generic;
 
 namespace BugTrackingProject.Models;
@@ -34,4 +35,8 @@ public partial class Bug
     public double? TotalTimeTaken { get; set; }
 
     public string? BugDesciption { get; set; }
+
+    public ICollection<Comment> comment { get; set; }
+
+    public UserComment User { get; set; }
 }
