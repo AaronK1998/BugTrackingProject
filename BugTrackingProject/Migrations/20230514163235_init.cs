@@ -30,6 +30,7 @@ namespace BugTrackingProject.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -48,32 +49,6 @@ namespace BugTrackingProject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bugs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Component = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LoginName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BugHeading = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecondaryStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Importance = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EstimateTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    TotalEstimatedTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    ActualTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    TotalTimeTaken = table.Column<double>(type: "float", nullable: true),
-                    BugDesciption = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bugs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,6 +171,65 @@ namespace BugTrackingProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Bugs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Component = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LoginName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BugHeading = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SecondaryStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Importance = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EstimateTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    TotalEstimatedTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    ActualTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    TotalTimeTaken = table.Column<double>(type: "float", nullable: true),
+                    BugDesciption = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bugs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bugs_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BugId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CommentText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_Bugs_BugId",
+                        column: x => x.BugId,
+                        principalTable: "Bugs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StoryBoards",
                 columns: table => new
                 {
@@ -258,6 +292,21 @@ namespace BugTrackingProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bugs_UserId",
+                table: "Bugs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_BugId",
+                table: "Comments",
+                column: "BugId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StoryBoards_BugId",
                 table: "StoryBoards",
                 column: "BugId");
@@ -282,6 +331,9 @@ namespace BugTrackingProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "Statuses");
 
             migrationBuilder.DropTable(
@@ -291,10 +343,10 @@ namespace BugTrackingProject.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Bugs");
 
             migrationBuilder.DropTable(
-                name: "Bugs");
+                name: "AspNetUsers");
         }
     }
 }
