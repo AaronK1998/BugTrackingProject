@@ -35,9 +35,9 @@
             <label for="loginName">User solving the bug</label>
             <InputSelect @bind-Value="bug.LoginName" class="form-control">
                 <option value="">Select User to solve the bug</option>
-                @foreach (var user in ColUsers)
+                @foreach (var userName in User)
                 {
-                    <option value="@user.UserName"> @user.UserName </option>
+                    <option value="@userName.UserName"> @userName.UserName </option>
                 }
             </InputSelect>
         </div>
@@ -124,7 +124,7 @@
     public List<User> Users { get; set; } = new List<User>();
     protected bool IsDisabled { get; set; }
 
-    List<IdentityUser> ColUsers = new List<IdentityUser>();
+    List<IdentityUser> User = new List<IdentityUser>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,16 +134,14 @@
     public void GetUsers()
     {
 
-        // Collection to hold users
-        ColUsers = new List<IdentityUser>();
-        // get users from _UserManager
-        var user = _UserManager.Users.Select(x => new IdentityUser
+        User = new List<IdentityUser>();
+        var newuser = _UserManager.Users.Select(x => new IdentityUser
             {
                 UserName = x.UserName,
             });
-        foreach (var item in user)
+        foreach (var users in newuser)
         {
-            ColUsers.Add(item);
+            User.Add(users);
         }
     }
 
