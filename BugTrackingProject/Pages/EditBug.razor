@@ -39,9 +39,9 @@
             <label for="loginName">User solving the bug</label>
             <InputSelect @bind-Value="bug.LoginName" class="form-control">
                 <option value="">Select User to solve the bug</option>
-                @foreach (var user in ColUsers)
+                @foreach (var userName in User)
                 {
-                    <option value="@user.UserName"> @user.UserName </option>
+                    <option value="@userName.UserName"> @userName.UserName </option>
                 }
             </InputSelect>
         </div>
@@ -134,7 +134,7 @@
     public int id { get; set; }
 
     public Bug bug = new Bug();
-    List<IdentityUser> ColUsers = new List<IdentityUser>();
+    List<IdentityUser> User = new List<IdentityUser>();
     public string userId { get; set; }
     public Comment commentModel = new Comment();
     public ClaimsPrincipal currentUser { get; set; }
@@ -156,18 +156,14 @@
 
     public void GetUsers()
     {
-
-        // Collection to hold users
-        ColUsers = new List<IdentityUser>
-    ();
-        // get users from _UserManager
-        var user = _UserManager.Users.Select(x => new IdentityUser
+        User = new List<IdentityUser>();
+        var newuser = _UserManager.Users.Select(x => new IdentityUser
             {
                 UserName = x.UserName,
             });
-        foreach (var item in user)
+        foreach (var users in newuser)
         {
-            ColUsers.Add(item);
+            User.Add(users);
         }
     }
 

@@ -6,19 +6,19 @@ namespace BugTrackingProject.Data
 {
     public class BugService : IBugService
     {
-        readonly ApplicationDbContext _dbContext = new();
+        readonly ApplicationDbContext _dbct = new();
 
         public BugService(ApplicationDbContext dbContext)
         {
-            _dbContext = dbContext;
+            _dbct = dbContext;
         }
 
         public void AddBug(Bug bug)
         {
             try
             {
-                _dbContext.Bugs.Add(bug);
-                _dbContext.SaveChanges();
+                _dbct.Bugs.Add(bug);
+                _dbct.SaveChanges();
             }
             catch
             {
@@ -30,11 +30,11 @@ namespace BugTrackingProject.Data
         {
             try
             {
-                Bug? bug = _dbContext.Bugs.Find(id);
+                Bug? bug = _dbct.Bugs.Find(id);
                 if (bug != null)
                 {
-                    _dbContext.Bugs.Remove(bug);
-                    _dbContext.SaveChanges();
+                    _dbct.Bugs.Remove(bug);
+                    _dbct.SaveChanges();
                 }
                 else
                 {
@@ -51,7 +51,7 @@ namespace BugTrackingProject.Data
         {
             try
             {
-                Bug? bug = _dbContext.Bugs.Find(id);
+                Bug? bug = _dbct.Bugs.Find(id);
                 if (bug != null)
                 {
                     return bug;
@@ -71,7 +71,7 @@ namespace BugTrackingProject.Data
         {
             try
             {
-                return _dbContext.Bugs.ToList();
+                return _dbct.Bugs.ToList();
             }
             catch
             {
@@ -83,8 +83,8 @@ namespace BugTrackingProject.Data
         {
             try
             {
-                _dbContext.Entry(bug).State = EntityState.Modified;
-                _dbContext.SaveChanges();
+                _dbct.Entry(bug).State = EntityState.Modified;
+                _dbct.SaveChanges();
             }
             catch
             {
