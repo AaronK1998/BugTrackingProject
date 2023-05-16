@@ -4,8 +4,12 @@
 @using BugTrackingProject.Data
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims;
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @inject UserManager<IdentityUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
+@inject AuthenticationStateProvider authenticationStateProvider
 @inject HttpClient Http
 @inject IBugService bugService
 @inject ApplicationDbContext _context
@@ -13,7 +17,7 @@
 
 
 <div class="add-bug-form">
-    <EditForm Model=@bug OnValidSubmit=@HandleValidSubmit>
+    <EditForm Model="@bug" OnValidSubmit=@HandleValidSubmit>
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="form-group">
@@ -111,8 +115,17 @@
             <label for="TotalTimeTaken">Total Time Taken</label>
             <InputNumber readonly="true" id="ActualTimeTaken" class="form-control" minValue=0 @bind-Value="bug.TotalTimeTaken" />
         </div>
-
         <button class="btn btn-primary" type="submit">Save Bug</button>
+    </EditForm>
+
+    <EditForm Model="@commentModel" OnValidSubmit=@SaveComment>
+        <div class="AddComment">
+
+            <h3>Add Comment to Bug</h3>
+            <InputTextArea @bind-Value="@commentModel.CommentText" />
+
+            <button class="btn btn-primary" type="submit">Save Comment</button>
+        </div>
     </EditForm>
 </div>
 
@@ -122,19 +135,31 @@
 
     public Bug bug = new Bug();
     List<IdentityUser> ColUsers = new List<IdentityUser>();
+    public string userId { get; set; }
+    public Comment commentModel = new Comment();
+    public ClaimsPrincipal currentUser { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         bug = await Task.Run(() => bugService.GetBugData(id));
+        //bugComments = _context.Bugs.Where(x => x.Id == id).Include(c => c.comments).FirstOrDefault();
         GetUsers();
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        currentUser = authState.User;
+        if (SignInManager.IsSignedIn(currentUser))
+        {
+            userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
     }
+
 
 
     public void GetUsers()
     {
 
         // Collection to hold users
-        ColUsers = new List<IdentityUser>();
+        ColUsers = new List<IdentityUser>
+    ();
         // get users from _UserManager
         var user = _UserManager.Users.Select(x => new IdentityUser
             {
@@ -146,7 +171,24 @@
         }
     }
 
+    public async Task SaveComment()
+    {
+        try
+        {
+            commentModel.UserId = userId;
+            commentModel.BugId = id;
+            commentModel.CreatedDate = DateTime.Now;
 
+            _context.Comments.Add(commentModel);
+            await _context.SaveChangesAsync();
+        }
+        catch
+        {
+            base.StateHasChanged();
+        }
+        base.StateHasChanged();
+        navigationManager.NavigateTo("/Bug/BugDescriptionPage/" + bug.Id);
+    }
 
     public async void HandleValidSubmit()
     {

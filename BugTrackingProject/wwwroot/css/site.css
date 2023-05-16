@@ -66,3 +66,40 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.AddComment{
+    padding:15px;
+    background-color: lightblue;
+}
+
+    .AddComment InputTextArea{
+        width:100%;
+        padding: 10px;
+        height: 200px;
+        display: block;
+        padding: 15px;
+    }
+
+.comments{
+    width:100%;
+    display:block;
+}
+    .comments h5{
+        font-size:20px;
+        font-weight:bold;
+    }
+
+        .comments p{
+            font-size:16px;
+            padding:15px;
+        }
+.comment{
+    padding:15px;
+}
+
+.comments span{
+    font-size:14px;
+    font-weight:bold;
+    padding:15px;
+
+}

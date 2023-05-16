@@ -1,5 +1,6 @@
 using BugTrackingProject.Areas.Identity;
 using BugTrackingProject.Data;
+using BugTrackingProject.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Syncfusion.Blazor;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -25,6 +27,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddTransient<IBugService, BugService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<HttpClient>(factory => new HttpClient(new HttpClientHandler()
