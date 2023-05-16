@@ -38,18 +38,6 @@
 
 @code {
 
-    public class Status
-    {
-        public string ID { get; set; }
-        public string Text { get; set; }
-    }
-    public List<Status> localData = new List<Status>
-    {new Status() { ID= "1", Text= "Open" },
-        new Status() { ID= "2", Text= "Work in Progress" },
-        new Status() { ID= "3", Text= "Finished" }
-    };
-
-
     public class TasksModel
     {
         public string Id { get; set; }
@@ -60,14 +48,13 @@
 
     public List<TasksModel> Tasks = new List<TasksModel>()
     {
-        new TasksModel { Id = "Task 1", Title = "BLAZ-29001", Status = "Open", Summary = "Analyze the new requirements gathered from the customer." },
-        new TasksModel { Id = "Task 2", Title = "BLAZ-29002", Status = "Open", Summary = "Show the retrieved data from the server in grid control." },
-        new TasksModel { Id = "Task 3", Title = "BLAZ-29003", Status = "InProgress", Summary = "Improve application performance" },
-        new TasksModel { Id = "Task 4", Title = "BLAZ-29004", Status = "Testing", Summary = "Fix the issues reported by the customer." },
-        new TasksModel { Id = "Task 5", Title = "BLAZ-29005", Status = "Testing", Summary = "Fix the issues reported in Safari browser." },
-        new TasksModel { Id = "Task 6", Title = "BLAZ-29006", Status = "Close", Summary = "Analyze SQL server 2008 connection." },
-        new TasksModel { Id = "Task 7", Title = "BLAZ-29007", Status = "Close", Summary = "Analyze grid control." },
-        new TasksModel { Id = "Task 8", Title = "BLAZ-29008", Status = "Close", Summary = "Stored procedure for initial data binding of the grid." }
+        new TasksModel { Id = "T1", Title = "1", Status = "Open", Summary = "Open Task 1." },
+        new TasksModel { Id = "T2", Title = "2", Status = "Open", Summary = "Open Task 2." },
+        new TasksModel { Id = "T3", Title = "3", Status = "InProgress", Summary = "In-Progress Task 1" },
+        new TasksModel { Id = "T4", Title = "4", Status = "Testing", Summary = "Testing 1." },
+        new TasksModel { Id = "T5", Title = "5", Status = "Testing", Summary = "Testing 2." },
+        new TasksModel { Id = "T6", Title = "6", Status = "Close", Summary = "closed 1" },
+        new TasksModel { Id = "T7", Title = "7", Status = "Close", Summary = "closed 2" }
     };
 }
 
